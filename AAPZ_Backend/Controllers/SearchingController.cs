@@ -23,6 +23,7 @@ namespace AAPZ_Backend.Controllers
             searchWorkplaces = new SearchWorkplaces();
         }
 
+        [ProducesResponseType(typeof(List<FindedWorkplace>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpPost("SearhcForWorcplaces")]
         public IActionResult SearcForWorcplaces([FromBody] SearchingViewModel searchingViewModel)
@@ -31,6 +32,17 @@ namespace AAPZ_Backend.Controllers
 
             return new ObjectResult(findedWorkplaces);
         }
+
+      /*  [ProducesResponseType(typeof(FindedWorkplace), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpPost("GetAppropriationPercentage")]
+        public IActionResult GetAppropriationPercentage([FromBody] SearchingViewModel searchingViewModel, Workplace workplace)
+        {
+            //List<FindedWorkplace> findedWorkplaces = searchWorkplaces.PerformSearching(searchingViewModel);
+
+            return new ObjectResult(searchWorkplaces.GetAppropriationPercentage(searchingViewModel.SearchingModel,
+                workplace, searchingViewModel.WantedCost));
+        }*/
 
     }
 }

@@ -44,7 +44,7 @@ namespace AAPZ_Backend.BusinessLogic.Statistics
             {
                 double maximumTime = DateTime.DaysInMonth(year, i) * 12;
                 double realTime = (workplaces.Count() == 0) ? 0 : yearStatistics[i] / workplaces.Count();
-                yearStatistics[i] = realTime / maximumTime;
+                yearStatistics[i] = Math.Round(realTime / maximumTime, 2);
             }
 
             return yearStatistics;
@@ -79,7 +79,7 @@ namespace AAPZ_Backend.BusinessLogic.Statistics
             for (int i = 1; i <= dayInMonth; i++)
             {
                 double realTime = (workplaces.Count() == 0) ? 0 : monthStatistics[i] / workplaces.Count();
-                monthStatistics[i] = realTime / 12;
+                monthStatistics[i] = Math.Round(realTime / 12, 2);
             }
 
             return monthStatistics;
@@ -109,8 +109,8 @@ namespace AAPZ_Backend.BusinessLogic.Statistics
 
             for (int i = 0; i < 7; i++)
             {
-                double realTime = (workplaces.Count() == 0)? 0 : weekStatistics[i] / workplaces.Count();
-                weekStatistics[i] = realTime / 12;
+                double realTime = (workplaces.Count() == 0)? 0 : weekStatistics[i] / workplaces.Count() / 8;
+                weekStatistics[i] = Math.Round(realTime / 12, 2);
             }
 
             return weekStatistics;

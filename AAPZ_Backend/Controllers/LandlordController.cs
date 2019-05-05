@@ -24,6 +24,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<Landlord>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetLandlordsList")]
         public IEnumerable<Landlord> GetLandlordsList()
@@ -32,6 +33,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET api/<controller>/5
+        [ProducesResponseType(typeof(Landlord), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetLandlordById/{id}")]
         public IActionResult GetLandlordById(int id)
@@ -43,6 +45,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // POST api/<controller>
+        [ProducesResponseType(typeof(Landlord), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPost("CreateLandlord")]
         public IActionResult CreateLandlord([FromBody]Landlord Landlord)
@@ -57,6 +60,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // PUT api/<controller>
+        [ProducesResponseType(typeof(Landlord), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPut("UpdateLandlord")]
         public IActionResult UpdateLandlord([FromBody]Landlord Landlord)
@@ -71,6 +75,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // DELETE api/<controller>/5
+        [ProducesResponseType(typeof(Landlord), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteLandlord/{id}")]
         public IActionResult DeleteLandlord(int id)

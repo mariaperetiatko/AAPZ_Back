@@ -24,6 +24,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<Workplace>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetWorkplacesList")]
         public IEnumerable<Workplace> GetWorkplacesList()
@@ -32,6 +33,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET api/<controller>/5
+        [ProducesResponseType(typeof(Workplace), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetWorkplaceById/{id}")]
         public IActionResult GetWorkplaceById(int id)
@@ -43,6 +45,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // POST api/<controller>
+        [ProducesResponseType(typeof(Workplace), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPost("CreateWorkplace")]
         public IActionResult CreateWorkplace([FromBody]Workplace Workplace)
@@ -57,6 +60,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // PUT api/<controller>
+        [ProducesResponseType(typeof(Workplace), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPut("UpdateWorkplace")]
         public IActionResult UpdateWorkplace([FromBody]Workplace Workplace)
@@ -71,6 +75,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // DELETE api/<controller>/5
+        [ProducesResponseType(typeof(Workplace), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteWorkplace/{id}")]
         public IActionResult DeleteWorkplace(int id)

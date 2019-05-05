@@ -24,6 +24,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<Client>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetClientsList")]
         public IEnumerable<Client> GetClientsList()
@@ -32,6 +33,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET api/<controller>/5
+        [ProducesResponseType(typeof(Client), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetClientById/{id?}")]
         public IActionResult GetClientById(int id)
@@ -48,6 +50,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // POST api/<controller>
+        [ProducesResponseType(typeof(Client), StatusCodes.Status200OK)]
         [Authorize(Roles = "Member")]
         [HttpPost("CreateClient")]
         public IActionResult CreateClient([FromBody]Client client)
@@ -61,8 +64,9 @@ namespace AAPZ_Backend.Controllers
         }
 
         // PUT api/<controller>
+        [ProducesResponseType(typeof(Client), StatusCodes.Status200OK)]
         [Authorize]
-        [HttpPut("UpdateClient")]
+        [HttpPut/*("UpdateClient")*/]
         public IActionResult UpdateClient([FromBody]Client client)
         {
             if (client == null)
@@ -75,6 +79,7 @@ namespace AAPZ_Backend.Controllers
             //if (currentClient != null)
             //{
             //    client.Id = currentClient.Id;
+            //   // client.IdentityId = currentClient.IdentityId;                 
             //}
 
             clientDB.Update(client);
@@ -82,6 +87,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // DELETE api/<controller>/5
+        [ProducesResponseType(typeof(Client), StatusCodes.Status200OK)]
         [Authorize]
         [HttpDelete("DeleteClient/{id?}")]
         public IActionResult DeleteClient(int id)

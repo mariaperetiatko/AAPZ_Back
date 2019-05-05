@@ -22,6 +22,7 @@ namespace AAPZ_Backend.Controllers
             clientDB = repository;
         }
 
+        [ProducesResponseType(typeof(double), StatusCodes.Status200OK)]
         [Authorize]
         [HttpPost("CalculateRecommendedTableHeight/{clientId}")]
         public IActionResult CalculateRecommendedTableHeight(int clientId)
@@ -35,6 +36,7 @@ namespace AAPZ_Backend.Controllers
                 );
         }
 
+        [ProducesResponseType(typeof(double), StatusCodes.Status200OK)]
         [Authorize]
         [HttpPost("CalculateRecommendedChairHeight/{clientId}")]
         public IActionResult CalculateRecommendedChairHeight(int clientId)

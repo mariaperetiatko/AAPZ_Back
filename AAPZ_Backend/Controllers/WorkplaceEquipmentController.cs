@@ -24,6 +24,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceEquipment>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetWorkplaceEquipmentsList")]
         public IEnumerable<WorkplaceEquipment> GetWorkplaceEquipmentsList()
@@ -32,6 +33,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET api/<controller>/5
+        [ProducesResponseType(typeof(WorkplaceEquipment), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetWorkplaceEquipmentById/{id}")]
         public IActionResult GetWorkplaceEquipmentById(int id)
@@ -43,6 +45,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // POST api/<controller>
+        [ProducesResponseType(typeof(WorkplaceEquipment), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPost("CreateWorkplaceEquipment")]
         public IActionResult CreateWorkplaceEquipment([FromBody]WorkplaceEquipment WorkplaceEquipment)
@@ -57,6 +60,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // PUT api/<controller>
+        [ProducesResponseType(typeof(WorkplaceEquipment), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPut("UpdateWorkplaceEquipment")]
         public IActionResult UpdateWorkplaceEquipment([FromBody]WorkplaceEquipment WorkplaceEquipment)
@@ -71,6 +75,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // DELETE api/<controller>/5
+        [ProducesResponseType(typeof(WorkplaceEquipment), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteWorkplaceEquipment/{id}")]
         public IActionResult DeleteWorkplaceEquipment(int id)

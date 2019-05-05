@@ -29,6 +29,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetWorkplaceOrdersList")]
         public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersList()
@@ -38,6 +39,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET: api/<controller>
+        [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetWorkplaceOrdersListByClient/{id?}")]
         public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersListByClient(int ?clientId)
@@ -52,6 +54,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET api/<controller>/5
+        [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetWorkplaceOrderById/{id}")]
         public IActionResult GetWorkplaceOrderById(int id)
@@ -63,6 +66,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // POST api/<controller>
+        [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
         [Authorize]
         [HttpPost("CreateWorkplaceOrder")]
         public IActionResult CreateWorkplaceOrder([FromBody]WorkplaceOrder WorkplaceOrder)
@@ -91,6 +95,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // PUT api/<controller>
+        [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
         [Authorize]
         [HttpPut("UpdateWorkplaceOrder")]
         public IActionResult UpdateWorkplaceOrder([FromBody]WorkplaceOrder WorkplaceOrder)
@@ -105,6 +110,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // DELETE api/<controller>/5
+        [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
         [Authorize]
         [HttpDelete("DeleteWorkplaceOrder/{id}")]
         public IActionResult DeleteWorkplaceOrder(int id)

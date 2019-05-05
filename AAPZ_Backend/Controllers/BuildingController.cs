@@ -25,6 +25,7 @@ namespace AAPZ_Backend.Controllers
 
         [Authorize]
         // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<Building>), StatusCodes.Status200OK)]
         [HttpGet("GetBuildingsList")]
         public IEnumerable<Building> GetBuildingsList()
         {
@@ -32,6 +33,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET api/<controller>/5
+        [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetBuildingById/{id}")]
         public IActionResult GetBuildingById(int id)
@@ -43,6 +45,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // POST api/<controller>
+        [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPost("CreateBuilding")]
         [Authorize]
@@ -58,7 +61,8 @@ namespace AAPZ_Backend.Controllers
         }
 
         // PUT api/<controller>
-        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("UpdateBuilding")]
         public IActionResult UpdateBuilding([FromBody]Building Building)
         {
@@ -72,6 +76,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // DELETE api/<controller>/5
+        [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteBuilding/{id}")]
         public IActionResult DeleteBuilding(int id)

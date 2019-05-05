@@ -24,6 +24,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<Equipment>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetEquipmentsList")]
         public IEnumerable<Equipment> GetEquipmentsList()
@@ -32,6 +33,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET api/<controller>/5
+        [ProducesResponseType(typeof(Equipment), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetEquipmentById/{id}")]
         public IActionResult GetEquipmentById(int id)
@@ -43,6 +45,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // POST api/<controller>
+        [ProducesResponseType(typeof(Equipment), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPost("CreateEquipment")]
         public IActionResult CreateEquipment([FromBody]Equipment Equipment)
@@ -57,6 +60,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // PUT api/<controller>
+        [ProducesResponseType(typeof(Equipment), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpPut("UpdateEquipment")]
         public IActionResult UpdateEquipment([FromBody]Equipment Equipment)
@@ -71,6 +75,7 @@ namespace AAPZ_Backend.Controllers
         }
 
         // DELETE api/<controller>/5
+        [ProducesResponseType(typeof(Equipment), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteEquipment/{id}")]
         public IActionResult DeleteEquipment(int id)

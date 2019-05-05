@@ -22,6 +22,7 @@ namespace AAPZ_Backend.Controllers
             workplaceStatistics = new WorkplaceStatistics();
         }
 
+        [ProducesResponseType(typeof(Dictionary<int, double>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetStatisticsByYear/{year}, {buildingId}")]
         public IActionResult GetStatisticsByYear(int year, int buildingId)
@@ -29,6 +30,7 @@ namespace AAPZ_Backend.Controllers
             return new ObjectResult(workplaceStatistics.GetStatisticsByYear(year, buildingId));
         }
 
+        [ProducesResponseType(typeof(Dictionary<int, double>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetStatisticsByMonth/{year}, {month}, {buildingId}")]
         public IActionResult GetStatisticsByMonth(int year, int month, int buildingId)
@@ -36,6 +38,7 @@ namespace AAPZ_Backend.Controllers
             return new ObjectResult(workplaceStatistics.GetStatisticsByMonth(year, month, buildingId));
         }
 
+        [ProducesResponseType(typeof(Dictionary<int, double>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetAverageStatisticsByWeek/{buildingId}")]
         public IActionResult GetAverageStatisticsByWeek(int buildingId)
