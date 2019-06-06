@@ -25,6 +25,7 @@ namespace AAPZ_Backend
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Equipment> Equipment { get; set; }
         public virtual DbSet<WorkplaceEquipment> WorkplaceEquipment { get; set; }
+        public virtual DbSet<Distance> Diastance { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

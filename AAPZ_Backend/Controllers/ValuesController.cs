@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;using AAPZ_Backend.Models;
 
 namespace AAPZ_Backend.Controllers
 {
@@ -10,17 +10,39 @@ namespace AAPZ_Backend.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private SheringDBContext sheringDBContext;
+
+        public ValuesController()
+        {
+            sheringDBContext = new SheringDBContext();
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            Distance dist = sheringDBContext.Diastance.Last();
+            return new string[] { dist.DistanceValue.ToString(), "value2" };
+        }
+
+        // GET api/values
+        [HttpGet("h")]
+        public ActionResult<string> h()
+        {
+            return "Backend works";
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<string> Get(double id)
         {
+            Distance distance = new Distance()
+            {
+                DistanceValue = id,
+                Date = DateTime.Now
+            };
+            sheringDBContext.Diastance.Add(distance);
+            sheringDBContext.SaveChanges();
             return "value";
         }
 

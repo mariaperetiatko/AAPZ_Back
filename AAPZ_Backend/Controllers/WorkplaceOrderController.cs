@@ -39,18 +39,18 @@ namespace AAPZ_Backend.Controllers
         }
 
         // GET: api/<controller>
-        [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
         [Authorize]
-        [HttpGet("GetWorkplaceOrdersListByClient/{id?}")]
-        public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersListByClient(int ?clientId)
+        [HttpGet("GetWorkplaceOrdersListByClient/{clientId}")]
+        public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersListByClient(int clientId)
         {
-            string userJWTId = User.FindFirst("id")?.Value;
-            Client client = clientDB.GetCurrentClient(userJWTId);
-            if(client != null)
-                return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == client.Id);
-            else if(clientId != null)
+            //string userJWTId = User.FindFirst("id")?.Value;
+            //Client client = clientDB.GetCurrentClient(userJWTId);
+           // if(client != null)
+                //return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == client.Id);
+           // if(clientId != null)
                 return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == clientId);
-            else return null;
+           // else return null;
         }
 
         // GET api/<controller>/5

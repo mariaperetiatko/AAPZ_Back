@@ -25,7 +25,7 @@ namespace AAPZ_Backend.Controllers
 
         // GET: api/<controller>
         [ProducesResponseType(typeof(IEnumerable<Client>), StatusCodes.Status200OK)]
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetClientsList")]
         public IEnumerable<Client> GetClientsList()
         {
@@ -35,17 +35,17 @@ namespace AAPZ_Backend.Controllers
         // GET api/<controller>/5
         [ProducesResponseType(typeof(Client), StatusCodes.Status200OK)]
         [Authorize]
-        [HttpGet("GetClientById/{id?}")]
+        [HttpGet("GetClientById/{id}")]
         public IActionResult GetClientById(int id)
         {
-            string userJWTId = User.FindFirst("id")?.Value;
-            Client client = clientDB.GetCurrentClient(userJWTId);
-            if (client == null)
-            {
-                client = clientDB.GetEntity(id);
+           // string userJWTId = User.FindFirst("id")?.Value;
+            //Client client = clientDB.GetCurrentClient(id);
+            //if (client == null)
+            //{
+               Client client = clientDB.GetEntity(id);
                 if (client == null)
                     return NotFound();
-            }
+            //}
             return new ObjectResult(client);
         }
 
@@ -92,16 +92,16 @@ namespace AAPZ_Backend.Controllers
         [HttpDelete("DeleteClient/{id?}")]
         public IActionResult DeleteClient(int id)
         {
-            string userJWTId = User.FindFirst("id")?.Value;
-            Client client = clientDB.GetCurrentClient(userJWTId);
-            if (client == null)
-            {
-                client = clientDB.GetEntity(id);
+            //string userJWTId = User.FindFirst("id")?.Value;
+            //Client client = clientDB.GetCurrentClient(userJWTId);
+            //if (client == null)
+            //{
+               Client client = clientDB.GetEntity(id);
                 if (client == null)
                 {
                     return NotFound();
                 }
-            }
+            //}
             
             clientDB.Delete(client.Id);
             return Ok(client);

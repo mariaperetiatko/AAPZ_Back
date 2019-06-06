@@ -31,8 +31,8 @@ namespace AAPZ_Backend.BusinessLogic.Searching
 
             foreach(Building building in buildingList)
             {
-                bool isInDistance = Math.Sqrt(Math.Pow(x - (double)building.X, 2)
-                    + Math.Pow(y - (double)building.Y, 2)) <= (radius / 111);
+                bool isInDistance = Math.Sqrt(Math.Pow(x / 100000 - (double)building.X / 100000, 2)
+                    + Math.Pow(y / 100000 - (double)building.Y / 100000, 2)) <= (radius / 111);
                 if(isInDistance)
                 {
                     resultBuildingList.Add(building.Id);
