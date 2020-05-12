@@ -14,7 +14,7 @@ namespace AAPZ_Backend.Models
         public int Id { get; set; }
         public int? Mark { get; set; }
         
-        public int Cost { get; set; }
+        public double Cost { get; set; }
         public int BuildingId { get; set; }
 
         public Building Building { get; set; }

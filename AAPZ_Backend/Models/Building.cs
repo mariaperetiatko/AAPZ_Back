@@ -19,6 +19,11 @@ namespace AAPZ_Backend.Models
         public int? LandlordId { get; set; }
         public double? X { get; set; }
         public double? Y { get; set; }
+        public string Name { get; set; }
+        public int? StartHour { get; set; }
+        public int? StartMinute { get; set; }
+        public int? FinistHour { get; set; }
+        public int? FinishMinute { get; set; }
 
         public Landlord Landlord { get; set; }
         public ICollection<Workplace> Workplace { get; set; }

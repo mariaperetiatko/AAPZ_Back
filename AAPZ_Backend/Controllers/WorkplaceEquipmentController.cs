@@ -16,7 +16,7 @@ namespace AAPZ_Backend.Controllers
     [Route("api/[controller]")]
     public class WorkplaceEquipmentController : Controller
     {
-        IDBActions<WorkplaceEquipment> WorkplaceEquipmentDB;
+        WorkplaceEquipmentRepository WorkplaceEquipmentDB;
 
         public WorkplaceEquipmentController()
         {
@@ -32,6 +32,23 @@ namespace AAPZ_Backend.Controllers
             return WorkplaceEquipmentDB.GetEntityList();
         }
 
+        // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceEquipment>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetWorkplaceEquipmentsList/{workplaceId}")]
+        public IEnumerable<WorkplaceEquipment> GetWorkplaceEquipmentByWorkplace(int workplaceId)
+        {
+            return WorkplaceEquipmentDB.GetWorkplaceEquipmentByWorkplace(workplaceId);
+        }
+
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceEquipment>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetWorkplaceEquipmentByWorkplaceWithEquipment/{workplaceId}")]
+        public IEnumerable<WorkplaceEquipment> GetWorkplaceEquipmentByWorkplaceWithEquipment(int workplaceId)
+        {
+            return WorkplaceEquipmentDB.GetWorkplaceEquipmentByWorkplaceWithEquipment(workplaceId);
+        }
+        
         // GET api/<controller>/5
         [ProducesResponseType(typeof(WorkplaceEquipment), StatusCodes.Status200OK)]
         [Authorize]

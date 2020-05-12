@@ -112,11 +112,11 @@ namespace AAPZ_Backend.BusinessLogic.Searching
                         }
                         else
                         {
-                            double satisfactionCoefficient =
-                                (double) currentWorkplaceEquipment.Count / workplaceParameter.Count;
-                            satisfactionCoefficient = (satisfactionCoefficient > 1) ? 1 : satisfactionCoefficient;
+                            double workplaceSatisfactionCoefficient =
+                                (double) currentWorkplaceEquipment.Count / (double) workplaceParameter.Count;
+                            workplaceSatisfactionCoefficient = (workplaceSatisfactionCoefficient > 1) ? 1 : workplaceSatisfactionCoefficient;
 
-                            equipmentAppropriation += (satisfactionCoefficient * workplaceParameter.Priority);
+                            equipmentAppropriation += (workplaceSatisfactionCoefficient * workplaceParameter.Priority);
                         }
                     }
                 }
@@ -136,8 +136,11 @@ namespace AAPZ_Backend.BusinessLogic.Searching
                 }
                 else
                 {
-                    workplaceSearchingResult.CostAppropriation =
-                        (double) _searchSetting.WantedCost / buildingWorkplace.Cost * 100;
+                    double costStisfactionCoefficient =
+                        (double) _searchSetting.WantedCost / (double) buildingWorkplace.Cost;
+                    costStisfactionCoefficient = (costStisfactionCoefficient > 1) ? 1 : costStisfactionCoefficient;
+
+                    workplaceSearchingResult.CostAppropriation = costStisfactionCoefficient * 100;
                 }
 
                 buildingSearchingResult.WorkplaceSearchingResults.Add(workplaceSearchingResult);

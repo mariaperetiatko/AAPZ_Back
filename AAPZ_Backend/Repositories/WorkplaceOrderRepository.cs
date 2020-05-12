@@ -26,6 +26,11 @@ namespace AAPZ_Backend.Repositories
             return sheringDBContext.WorkplaceOrder.Where(x => x.ClientId == clientId);
         }
 
+        public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersByWorkplaceId(int workplaceId)
+        {
+            return sheringDBContext.WorkplaceOrder.Where(x => x.WorkplaceId == workplaceId);
+        }
+
         public WorkplaceOrder GetEntity(object id)
         {
             return sheringDBContext.WorkplaceOrder.SingleOrDefault(x => x.Id == (int)id);

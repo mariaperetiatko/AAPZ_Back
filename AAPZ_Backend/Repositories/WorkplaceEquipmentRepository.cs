@@ -36,6 +36,11 @@ namespace AAPZ_Backend.Repositories
             return sheringDBContext.WorkplaceEquipment.Where(x => x.WorkplaceId == workplaceId);
         }
 
+        public IEnumerable<WorkplaceEquipment> GetWorkplaceEquipmentByWorkplaceWithEquipment(int workplaceId)
+        {
+            return sheringDBContext.WorkplaceEquipment.Where(x => x.WorkplaceId == workplaceId).Include(y => y.Equipment);
+        }
+
         public void Create(WorkplaceEquipment workplaceEquipment)
         {
             sheringDBContext.WorkplaceEquipment.Add(workplaceEquipment);

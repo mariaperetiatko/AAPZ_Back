@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AAPZ_Backend;
 using AAPZ_Backend.Repositories;
 using AAPZ_Backend.BusinessLogic.Ordering;
 using AAPZ_Backend.Models;
@@ -17,7 +12,7 @@ namespace AAPZ_Backend.Controllers
     [Route("api/WorkplaceOrder")]
     public class WorkplaceOrderController : Controller
     {
-        IDBActions<WorkplaceOrder> WorkplaceOrderDB;
+        WorkplaceOrderRepository WorkplaceOrderDB;
         OrderWorkplace OrderWorkplace;
         ClientRepository clientDB;
 
@@ -53,6 +48,22 @@ namespace AAPZ_Backend.Controllers
            // else return null;
         }
 
+        // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetWorkplaceOrdersByWorkplaceId/{workplaceId}")]
+        public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersByWorkplaceId(int workplaceId)
+        {
+            //string userJWTId = User.FindFirst("id")?.Value;
+            //Client client = clientDB.GetCurrentClient(userJWTId);
+            // if(client != null)
+            //return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == client.Id);
+            // if(clientId != null)
+            return WorkplaceOrderDB.GetWorkplaceOrdersByWorkplaceId(workplaceId);
+            // else return null;
+        }
+
+        
         // GET api/<controller>/5
         [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
         [Authorize]

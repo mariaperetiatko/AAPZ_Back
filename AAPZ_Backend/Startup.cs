@@ -144,7 +144,10 @@ namespace AAPZ_Backend
             builder.AddEntityFrameworkStores<SheringDBContext>().AddDefaultTokenProviders();
 
             services.AddAutoMapper();
-            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
+                .AddJsonOptions(
+                    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                ); ;
                 //.AddDataAnnotationsLocalization(options => {
                 //    options.DataAnnotationLocalizerProvider = (type, factory) =>
                 //    factory.Create(null);

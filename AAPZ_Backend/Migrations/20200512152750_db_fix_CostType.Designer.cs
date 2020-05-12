@@ -4,14 +4,16 @@ using AAPZ_Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AAPZ_Backend.Migrations
 {
     [DbContext(typeof(SheringDBContext))]
-    partial class SheringDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200512152750_db_fix_CostType")]
+    partial class db_fix_CostType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,10 +35,6 @@ namespace AAPZ_Backend.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<int?>("FinishMinute");
-
-                    b.Property<int?>("FinistHour");
-
                     b.Property<int>("Flat");
 
                     b.Property<string>("House")
@@ -44,12 +42,6 @@ namespace AAPZ_Backend.Migrations
                         .HasMaxLength(10);
 
                     b.Property<int?>("LandlordId");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int?>("StartHour");
-
-                    b.Property<int?>("StartMinute");
 
                     b.Property<string>("Street")
                         .IsRequired()
