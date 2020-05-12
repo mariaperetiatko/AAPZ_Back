@@ -22,6 +22,11 @@ namespace AAPZ_Backend.Repositories
             return sheringDBContext.Landlord;
         }
 
+        public IEnumerable<Landlord> GetEntityListByClientId(int clientId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Landlord GetEntity(object id)
         {
             return sheringDBContext.Landlord.SingleOrDefault(x => x.Id == (int)id);
@@ -30,6 +35,7 @@ namespace AAPZ_Backend.Repositories
         public void Create(Landlord landlord)
         {
             sheringDBContext.Landlord.Add(landlord);
+            sheringDBContext.SaveChanges();
         }
 
         //public Client GetClient(string tokenId)
@@ -41,6 +47,7 @@ namespace AAPZ_Backend.Repositories
         public void Update(Landlord landlord)
         {
             sheringDBContext.Entry(landlord).State = EntityState.Modified;
+            sheringDBContext.SaveChanges();
         }
 
         public void Delete(object id)
@@ -48,6 +55,7 @@ namespace AAPZ_Backend.Repositories
             Landlord landlord = sheringDBContext.Landlord.Find(id);
             if (landlord != null)
                 sheringDBContext.Landlord.Remove(landlord);
+            sheringDBContext.SaveChanges();
         }
 
         public void Save()

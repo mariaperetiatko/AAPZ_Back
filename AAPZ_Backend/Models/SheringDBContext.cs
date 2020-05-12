@@ -26,13 +26,15 @@ namespace AAPZ_Backend
         public virtual DbSet<Equipment> Equipment { get; set; }
         public virtual DbSet<WorkplaceEquipment> WorkplaceEquipment { get; set; }
         public virtual DbSet<Distance> Diastance { get; set; }
+        public virtual DbSet<WorkplaceParameter> WorkplaceParameter { get; set; }
+        public virtual DbSet<SearchSetting> SearchSetting { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-LLK7E72\\DEVELOPERSQL;Database=SheringDB;User Id=m;Password=1"/*Trusted_Connection=True;*/);
+                optionsBuilder.UseSqlServer("Server=DESKTOP-LLK7E72\\DEVELOPERSQL;Database=SheringDB;User Id=m;Password=1");///*;*Trusted_Connection=True
             }
         }
 
@@ -77,6 +79,11 @@ namespace AAPZ_Backend
                 entity.Property(e => e.FirstName).IsRequired();
 
                 entity.Property(e => e.LastName).IsRequired();
+
+                entity.HasOne(a => a.SearchSetting)
+                    .WithOne(b => b.Client)
+                    .HasForeignKey<SearchSetting>(b => b.SearchSettingId);
+
             });
 
             modelBuilder.Entity<Landlord>(entity =>

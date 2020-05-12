@@ -25,6 +25,11 @@ namespace AAPZ_Backend.Repositories
             return sheringDBContext.Client;
         }
 
+        public IEnumerable<Client> GetEntityListByClientId(int clientId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Client GetEntity(object id)
         {
 

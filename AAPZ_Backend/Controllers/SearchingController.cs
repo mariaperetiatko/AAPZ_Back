@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AAPZ_Backend.Models;
-using AAPZ_Backend.BusinessLogic.Classes;
 using AAPZ_Backend.BusinessLogic.Searching;
+using AAPZ_Backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AAPZ_Backend.Controllers
@@ -16,33 +13,39 @@ namespace AAPZ_Backend.Controllers
     [ApiController]
     public class SearchingController : ControllerBase
     {
-        SearchWorkplaces searchWorkplaces;
+        ClientRepository clientDB;
 
-        public SearchingController()
+        public SearchingController(ClientRepository clientRepository)
         {
-            searchWorkplaces = new SearchWorkplaces();
+            clientDB = clientRepository;
         }
 
-        [ProducesResponseType(typeof(List<FindedWorkplace>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<BuildingSearchingResult>), StatusCodes.Status200OK)]
         [Authorize]
-        [HttpPost("SearhcForWorcplaces")]
-        public IActionResult SearcForWorcplaces([FromBody] SearchingViewModel searchingViewModel)
+        [HttpGet("GetBuildingSearchingResults/{latitude}/{longitude}")]
+        public IActionResult GetBuildingSearchingResults(double latitude, double longitude)
         {
-            List<FindedWorkplace> findedWorkplaces = searchWorkplaces.PerformSearching(searchingViewModel);
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+            {
+                return NotFound();
+            }
 
-            return new ObjectResult(findedWorkplaces);
+            SearchWorkplaces sw = new SearchWorkplaces(latitude, longitude, client.Id);
+            return new ObjectResult(sw.GetSearchingResult());
         }
 
-      /*  [ProducesResponseType(typeof(FindedWorkplace), StatusCodes.Status200OK)]
-        [Authorize]
-        [HttpPost("GetAppropriationPercentage")]
-        public IActionResult GetAppropriationPercentage([FromBody] SearchingViewModel searchingViewModel, Workplace workplace)
-        {
-            //List<FindedWorkplace> findedWorkplaces = searchWorkplaces.PerformSearching(searchingViewModel);
+        /*  [ProducesResponseType(typeof(FindedWorkplace), StatusCodes.Status200OK)]
+          [Authorize]
+          [HttpPost("GetAppropriationPercentage")]
+          public IActionResult GetAppropriationPercentage([FromBody] SearchingViewModel searchingViewModel, Workplace workplace)
+          {
+              //List<FindedWorkplace> findedWorkplaces = searchWorkplaces.PerformSearching(searchingViewModel);
 
-            return new ObjectResult(searchWorkplaces.GetAppropriationPercentage(searchingViewModel.SearchingModel,
-                workplace, searchingViewModel.WantedCost));
-        }*/
+              return new ObjectResult(searchWorkplaces.GetAppropriationPercentage(searchingViewModel.SearchingModel,
+                  workplace, searchingViewModel.WantedCost));
+          }*/
 
     }
 }

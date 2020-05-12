@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AAPZ_Backend;
 using AAPZ_Backend.Repositories;
 using AAPZ_Backend.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -56,7 +51,6 @@ namespace AAPZ_Backend.Controllers
                 return BadRequest();
             }
             BuildingDB.Create(Building);
-            BuildingDB.Save();
             return Ok(Building);
         }
 
@@ -71,7 +65,6 @@ namespace AAPZ_Backend.Controllers
                 return BadRequest();
             }
             BuildingDB.Update(Building);
-            BuildingDB.Save();
             return Ok(Building);
         }
 
@@ -87,7 +80,6 @@ namespace AAPZ_Backend.Controllers
                 return NotFound();
             }
             BuildingDB.Delete(id);
-            BuildingDB.Save();
             return Ok(Building);
         }
     }

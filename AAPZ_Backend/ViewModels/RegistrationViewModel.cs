@@ -13,7 +13,7 @@ namespace AAPZ_Backend.ViewModels
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
         public long PassportNumber { get; set; }
-        public long Phone { get; set; }
+        public string Phone { get; set; }
         public string Role { get; set; }
     }
 }

@@ -2,40 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using AAPZ_Backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AAPZ_Backend.Repositories
 {
-    public class WorkplaceOrderRepository : IDBActions<WorkplaceOrder>
+    public class WorkplaceParameterRepository : IDBActions<WorkplaceParameter>
     {
         private SheringDBContext sheringDBContext;
 
-        public WorkplaceOrderRepository()
+        public WorkplaceParameterRepository()
         {
             this.sheringDBContext = new SheringDBContext();
         }
 
-        public IEnumerable<WorkplaceOrder> GetEntityList()
+        public IEnumerable<WorkplaceParameter> GetEntityList()
         {
-            return sheringDBContext.WorkplaceOrder;
+            throw new NotImplementedException();
         }
 
-        public IEnumerable<WorkplaceOrder> GetEntityListByClientId(int clientId)
+        public IEnumerable<WorkplaceParameter> GetEntityListByClientId(int clientId)
         {
-            return sheringDBContext.WorkplaceOrder.Where(x => x.ClientId == clientId);
+            return sheringDBContext.WorkplaceParameter.Where(b => b.ClientId == clientId);
         }
 
-        public WorkplaceOrder GetEntity(object id)
+        public WorkplaceParameter GetEntity(object id)
         {
-            return sheringDBContext.WorkplaceOrder.SingleOrDefault(x => x.Id == (int)id);
+            return sheringDBContext.WorkplaceParameter.SingleOrDefault(x => x.Id == (int)id);
         }
 
-        public void Create(WorkplaceOrder workplaceOrder)
+        public void Create(WorkplaceParameter workplace)
         {
-            Workplace workplace = sheringDBContext.Workplace.FirstOrDefault(e => e.Id == workplaceOrder.WorkplaceId);
-            
-            sheringDBContext.WorkplaceOrder.Add(workplaceOrder);
+            sheringDBContext.WorkplaceParameter.Add(workplace);
             sheringDBContext.SaveChanges();
         }
 
@@ -45,17 +43,16 @@ namespace AAPZ_Backend.Repositories
         //    return client;
         //}
 
-        public void Update(WorkplaceOrder workplaceOrder)
+        public void Update(WorkplaceParameter workplace)
         {
-            sheringDBContext.Entry(workplaceOrder).State = EntityState.Modified;
-            sheringDBContext.SaveChanges();
+            sheringDBContext.Entry(workplace).State = EntityState.Modified;
         }
 
         public void Delete(object id)
         {
-            WorkplaceOrder workplaceOrder = sheringDBContext.WorkplaceOrder.Find(id);
-            if (workplaceOrder != null)
-                sheringDBContext.WorkplaceOrder.Remove(workplaceOrder);
+            WorkplaceParameter workplace = sheringDBContext.WorkplaceParameter.Find(id);
+            if (workplace != null)
+                sheringDBContext.WorkplaceParameter.Remove(workplace);
             sheringDBContext.SaveChanges();
         }
 

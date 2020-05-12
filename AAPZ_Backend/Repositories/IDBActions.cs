@@ -9,6 +9,8 @@ namespace AAPZ_Backend.Repositories
         where T : class
     {
         IEnumerable<T> GetEntityList();
+        IEnumerable<T> GetEntityListByClientId(int clientId);
+
         T GetEntity(object key);
         void Create(T item);
         void Update(T item);

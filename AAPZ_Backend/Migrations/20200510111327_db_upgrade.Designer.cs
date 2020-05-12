@@ -4,14 +4,16 @@ using AAPZ_Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AAPZ_Backend.Migrations
 {
     [DbContext(typeof(SheringDBContext))]
-    partial class SheringDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200510111327_db_upgrade")]
+    partial class db_upgrade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,9 +47,9 @@ namespace AAPZ_Backend.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<double?>("X");
+                    b.Property<int?>("X");
 
-                    b.Property<double?>("Y");
+                    b.Property<int?>("Y");
 
                     b.HasKey("Id");
 
@@ -173,19 +175,6 @@ namespace AAPZ_Backend.Migrations
                     b.ToTable("Landlord");
                 });
 
-            modelBuilder.Entity("AAPZ_Backend.Models.SearchSetting", b =>
-                {
-                    b.Property<int>("SearchSettingId");
-
-                    b.Property<double>("Radius");
-
-                    b.Property<double>("WantedCost");
-
-                    b.HasKey("SearchSettingId");
-
-                    b.ToTable("SearchSetting");
-                });
-
             modelBuilder.Entity("AAPZ_Backend.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -302,29 +291,6 @@ namespace AAPZ_Backend.Migrations
                     b.HasIndex("WorkplaceId");
 
                     b.ToTable("WorkplaceOrder");
-                });
-
-            modelBuilder.Entity("AAPZ_Backend.Models.WorkplaceParameter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ClientId");
-
-                    b.Property<int>("Count");
-
-                    b.Property<int>("EquipmentId");
-
-                    b.Property<int>("Priority");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("EquipmentId");
-
-                    b.ToTable("WorkplaceParameter");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -467,14 +433,6 @@ namespace AAPZ_Backend.Migrations
                         .HasForeignKey("IdentityId");
                 });
 
-            modelBuilder.Entity("AAPZ_Backend.Models.SearchSetting", b =>
-                {
-                    b.HasOne("AAPZ_Backend.Models.Client", "Client")
-                        .WithOne("SearchSetting")
-                        .HasForeignKey("AAPZ_Backend.Models.SearchSetting", "SearchSettingId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("AAPZ_Backend.Models.Workplace", b =>
                 {
                     b.HasOne("AAPZ_Backend.Models.Building", "Building")
@@ -507,19 +465,6 @@ namespace AAPZ_Backend.Migrations
                         .WithMany("WorkplaceOrder")
                         .HasForeignKey("WorkplaceId")
                         .HasConstraintName("FK_WorkplaceId");
-                });
-
-            modelBuilder.Entity("AAPZ_Backend.Models.WorkplaceParameter", b =>
-                {
-                    b.HasOne("AAPZ_Backend.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("AAPZ_Backend.Models.Equipment", "Equipment")
-                        .WithMany()
-                        .HasForeignKey("EquipmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

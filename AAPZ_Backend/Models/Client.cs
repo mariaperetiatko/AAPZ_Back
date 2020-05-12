@@ -16,7 +16,7 @@ namespace AAPZ_Backend.Models
         public string LastName { get; set; }
         public DateTime Birthday { get; set; }
         public long PassportNumber { get; set; }
-        public long Phone { get; set; }
+        public string Phone { get; set; }
         public string Email { get; set; }
         public int? Hight { get; set; }
         public int? Vision { get; set; }
@@ -29,8 +29,10 @@ namespace AAPZ_Backend.Models
         public int IsInBlackList { get; set; }
         public int? Sale { get; set; }
         public string IdentityId { get; set; }
+        
         public User Identity { get; set; }  // navigation property
 
+        public virtual SearchSetting SearchSetting { get; set; }
 
         public ICollection<WorkplaceOrder> WorkplaceOrder { get; set; }
     }

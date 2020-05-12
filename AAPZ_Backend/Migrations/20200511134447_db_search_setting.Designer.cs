@@ -4,14 +4,16 @@ using AAPZ_Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AAPZ_Backend.Migrations
 {
     [DbContext(typeof(SheringDBContext))]
-    partial class SheringDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200511134447_db_search_setting")]
+    partial class db_search_setting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,7 +181,7 @@ namespace AAPZ_Backend.Migrations
 
                     b.Property<double>("Radius");
 
-                    b.Property<double>("WantedCost");
+                    b.Property<int>("WantedCost");
 
                     b.HasKey("SearchSettingId");
 

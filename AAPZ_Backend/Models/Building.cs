@@ -17,8 +17,8 @@ namespace AAPZ_Backend.Models
         public string House { get; set; }
         public int Flat { get; set; }
         public int? LandlordId { get; set; }
-        public int? X { get; set; }
-        public int? Y { get; set; }
+        public double? X { get; set; }
+        public double? Y { get; set; }
 
         public Landlord Landlord { get; set; }
         public ICollection<Workplace> Workplace { get; set; }

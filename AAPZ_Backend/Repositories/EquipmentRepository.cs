@@ -21,6 +21,11 @@ namespace AAPZ_Backend.Repositories
             return sheringDBContext.Equipment;
         }
 
+        public IEnumerable<Equipment> GetEntityListByClientId(int clientId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Equipment GetEntity(object id)
         {
             return sheringDBContext.Equipment.SingleOrDefault(x => x.Id == (int)id);
@@ -29,6 +34,7 @@ namespace AAPZ_Backend.Repositories
         public void Create(Equipment equipment)
         {
             sheringDBContext.Equipment.Add(equipment);
+            sheringDBContext.SaveChanges();
         }
 
         //public Client GetClient(string tokenId)
@@ -40,6 +46,7 @@ namespace AAPZ_Backend.Repositories
         public void Update(Equipment equipment)
         {
             sheringDBContext.Entry(equipment).State = EntityState.Modified;
+            sheringDBContext.SaveChanges();
         }
 
         public void Delete(object id)
@@ -47,6 +54,7 @@ namespace AAPZ_Backend.Repositories
             Equipment equipment = sheringDBContext.Equipment.Find(id);
             if (equipment != null)
                 sheringDBContext.Equipment.Remove(equipment);
+            sheringDBContext.SaveChanges();
         }
 
         public void Save()

@@ -8,7 +8,11 @@ namespace AAPZ_Backend.Models
     public class Distance
     {
         public int Id { get; set; }
+        public int ClientId { get; set; }
         public double DistanceValue { get; set; }
         public DateTime Date { get; set; }
+
+        public Client Client { get; set; }
     }
+
 }

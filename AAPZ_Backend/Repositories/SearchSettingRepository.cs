@@ -1,41 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using AAPZ_Backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AAPZ_Backend.Repositories
 {
-    public class WorkplaceOrderRepository : IDBActions<WorkplaceOrder>
+    public class SearchSettingRepository : IDBActions<SearchSetting>
     {
         private SheringDBContext sheringDBContext;
 
-        public WorkplaceOrderRepository()
+        public SearchSettingRepository()
         {
             this.sheringDBContext = new SheringDBContext();
         }
 
-        public IEnumerable<WorkplaceOrder> GetEntityList()
+        public IEnumerable<SearchSetting> GetEntityList()
         {
-            return sheringDBContext.WorkplaceOrder;
+            return sheringDBContext.SearchSetting;
         }
 
-        public IEnumerable<WorkplaceOrder> GetEntityListByClientId(int clientId)
+        public IEnumerable<SearchSetting> GetEntityListByClientId(int clientId)
         {
-            return sheringDBContext.WorkplaceOrder.Where(x => x.ClientId == clientId);
+            throw new NotImplementedException();
         }
 
-        public WorkplaceOrder GetEntity(object id)
+        public SearchSetting GetEntity(object id)
         {
-            return sheringDBContext.WorkplaceOrder.SingleOrDefault(x => x.Id == (int)id);
+            return sheringDBContext.SearchSetting.SingleOrDefault(x => x.SearchSettingId == (int)id);
         }
 
-        public void Create(WorkplaceOrder workplaceOrder)
+        public void Create(SearchSetting searchSetting)
         {
-            Workplace workplace = sheringDBContext.Workplace.FirstOrDefault(e => e.Id == workplaceOrder.WorkplaceId);
-            
-            sheringDBContext.WorkplaceOrder.Add(workplaceOrder);
+            sheringDBContext.SearchSetting.Add(searchSetting);
             sheringDBContext.SaveChanges();
         }
 
@@ -45,17 +42,17 @@ namespace AAPZ_Backend.Repositories
         //    return client;
         //}
 
-        public void Update(WorkplaceOrder workplaceOrder)
+        public void Update(SearchSetting searchSetting)
         {
-            sheringDBContext.Entry(workplaceOrder).State = EntityState.Modified;
+            sheringDBContext.Entry(searchSetting).State = EntityState.Modified;
             sheringDBContext.SaveChanges();
         }
 
         public void Delete(object id)
         {
-            WorkplaceOrder workplaceOrder = sheringDBContext.WorkplaceOrder.Find(id);
-            if (workplaceOrder != null)
-                sheringDBContext.WorkplaceOrder.Remove(workplaceOrder);
+            SearchSetting searchSetting = sheringDBContext.SearchSetting.Find(id);
+            if (searchSetting != null)
+                sheringDBContext.SearchSetting.Remove(searchSetting);
             sheringDBContext.SaveChanges();
         }
 

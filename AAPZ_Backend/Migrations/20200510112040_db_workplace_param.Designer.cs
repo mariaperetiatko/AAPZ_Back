@@ -4,14 +4,16 @@ using AAPZ_Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AAPZ_Backend.Migrations
 {
     [DbContext(typeof(SheringDBContext))]
-    partial class SheringDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200510112040_db_workplace_param")]
+    partial class db_workplace_param
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,9 +47,9 @@ namespace AAPZ_Backend.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<double?>("X");
+                    b.Property<int?>("X");
 
-                    b.Property<double?>("Y");
+                    b.Property<int?>("Y");
 
                     b.HasKey("Id");
 
@@ -171,19 +173,6 @@ namespace AAPZ_Backend.Migrations
                     b.HasIndex("IdentityId");
 
                     b.ToTable("Landlord");
-                });
-
-            modelBuilder.Entity("AAPZ_Backend.Models.SearchSetting", b =>
-                {
-                    b.Property<int>("SearchSettingId");
-
-                    b.Property<double>("Radius");
-
-                    b.Property<double>("WantedCost");
-
-                    b.HasKey("SearchSettingId");
-
-                    b.ToTable("SearchSetting");
                 });
 
             modelBuilder.Entity("AAPZ_Backend.Models.User", b =>
@@ -465,14 +454,6 @@ namespace AAPZ_Backend.Migrations
                     b.HasOne("AAPZ_Backend.Models.User", "Identity")
                         .WithMany()
                         .HasForeignKey("IdentityId");
-                });
-
-            modelBuilder.Entity("AAPZ_Backend.Models.SearchSetting", b =>
-                {
-                    b.HasOne("AAPZ_Backend.Models.Client", "Client")
-                        .WithOne("SearchSetting")
-                        .HasForeignKey("AAPZ_Backend.Models.SearchSetting", "SearchSettingId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AAPZ_Backend.Models.Workplace", b =>

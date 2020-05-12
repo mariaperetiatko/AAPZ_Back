@@ -1,101 +1,149 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AAPZ_Backend.Repositories;
 using AAPZ_Backend.Models;
-using AAPZ_Backend.BusinessLogic.Classes;
 
 
 namespace AAPZ_Backend.BusinessLogic.Searching
 {
+
+    public class BuildingSearchingResult
+    {
+        public Building Building { get; set; }
+        public List<WorkplaceSearchingResult> WorkplaceSearchingResults { get; set; } = new List<WorkplaceSearchingResult>();
+    }
+
+    public class WorkplaceSearchingResult
+    {
+        public int WorkplaceId { get; set; }
+        public double EquipmentAppropriation { get; set; }
+        public double CostAppropriation { get; set; }
+    }
+
     public class SearchWorkplaces
     {
-        IDBActions<Workplace> workplaceDB;
-        IDBActions<Building> buildingDB;
-        IDBActions<WorkplaceEquipment> workplaceEquipmentDB;
-        IDBActions<Equipment> equipmentDB;
+        private readonly IDBActions<WorkplaceParameter> _workplaceParameterDB;
+        private readonly IDBActions<SearchSetting> _searchSettingDB;
+        private readonly BuildingRepository _buildingDB;
+        private readonly WorkplaceRepository _workplaceDB;
+        private readonly WorkplaceEquipmentRepository _workplaceEquipmentDB;
+        private readonly double _idealMark;
 
-        public SearchWorkplaces()
+        private readonly double _latitude;
+        private readonly double _longitude;
+        private readonly IEnumerable<WorkplaceParameter> _workplaceParameters;
+        private readonly SearchSetting _searchSetting;
+        private readonly IEnumerable<Building> _buildingsInRadius;
+
+
+        public SearchWorkplaces(double latitude, double longitude, int clientId)
         {
-            workplaceDB = new WorkplaceRepository();
-            buildingDB = new BuildingRepository();
-            workplaceEquipmentDB = new WorkplaceEquipmentRepository();
-            equipmentDB = new EquipmentRepository();
+            _workplaceParameterDB = new WorkplaceParameterRepository();
+            _searchSettingDB = new SearchSettingRepository();
+            _buildingDB = new BuildingRepository();
+            _workplaceDB = new WorkplaceRepository();
+            _workplaceEquipmentDB = new WorkplaceEquipmentRepository();
+            _latitude = latitude;
+            _longitude = longitude;
+            _workplaceParameters = _workplaceParameterDB.GetEntityListByClientId(clientId);
+            _idealMark = GetIdealMark();
+            _searchSetting = _searchSettingDB.GetEntity(clientId);
+            _buildingsInRadius = GetBuildingsInRadius();
         }
 
-        public List<int> SearchInRadius(int radius, double x, double y)
-        {          
-            List<Building> buildingList = buildingDB.GetEntityList().ToList();
-            List<int> resultBuildingList = new List<int>();
-
-            foreach(Building building in buildingList)
+        private double GetIdealMark()
+        {
+            double idealMark = 0;
+            foreach (var workplaceParameter in _workplaceParameters)
             {
-                bool isInDistance = Math.Sqrt(Math.Pow(x / 100000 - (double)building.X / 100000, 2)
-                    + Math.Pow(y / 100000 - (double)building.Y / 100000, 2)) <= (radius / 111);
-                if(isInDistance)
-                {
-                    resultBuildingList.Add(building.Id);
-                }
+                idealMark += workplaceParameter.Priority;
             }
-            return resultBuildingList;               
+
+            return idealMark;
         }
 
-        public FindedWorkplace GetAppropriationPercentage(List<SearchingModel> searchingModel,
-            Workplace workplaceInRadius, int wantedCost)
+        private IEnumerable<Building> GetBuildingsInRadius()
         {
-            List<int> workplaceEquipmentIds = workplaceEquipmentDB.GetEntityList()
-                .Where(e => e.WorkplaceId == workplaceInRadius.Id).Select(e => e.EquipmentId)
-                .ToList();
+            double degreeRadius = _searchSetting.Radius / 111;
+            return _buildingDB.GetBuildingsInRadius(_latitude + degreeRadius,
+                _latitude - degreeRadius, _longitude + degreeRadius, _longitude - degreeRadius);
+        }
 
-            double oneImportancePart = 100 / searchingModel.Count();
+        public List<BuildingSearchingResult> GetSearchingResult()
+        {
+            List<BuildingSearchingResult> searchingResult = new List<BuildingSearchingResult>();
 
-            double resultingPercentage = 0;
-
-            foreach(var searchInstance in searchingModel)
+            foreach (var buildingsInRadius in _buildingsInRadius)
             {
-                if(workplaceEquipmentIds.Contains(searchInstance.EquipmentId))
+                searchingResult.Add(GetBuildingSearchingResult(buildingsInRadius));
+            }
+
+            return searchingResult;
+        }
+
+        private BuildingSearchingResult GetBuildingSearchingResult(Building building)
+        {
+            BuildingSearchingResult buildingSearchingResult = new BuildingSearchingResult();
+            buildingSearchingResult.Building = building;
+
+            IEnumerable<Workplace> buildingWorkplaces = _workplaceDB.GetWorkplacesByBuildingId(building.Id);
+
+            foreach (var buildingWorkplace in buildingWorkplaces)
+            {
+                WorkplaceSearchingResult workplaceSearchingResult = new WorkplaceSearchingResult();
+                workplaceSearchingResult.WorkplaceId = buildingWorkplace.Id;
+
+                IEnumerable<WorkplaceEquipment> currentWorkplaceEquipments =
+                    _workplaceEquipmentDB.GetWorkplaceEquipmentByWorkplace(buildingWorkplace.Id);
+
+
+                double equipmentAppropriation = 0;
+
+                foreach (var workplaceParameter in _workplaceParameters)
                 {
-                    resultingPercentage += oneImportancePart;
+                    WorkplaceEquipment currentWorkplaceEquipment =
+                        currentWorkplaceEquipments.FirstOrDefault(x => x.EquipmentId == workplaceParameter.EquipmentId);
+
+                    if (currentWorkplaceEquipment != null && workplaceParameter.Priority != 0)
+                    {
+                        if (workplaceParameter.Count == 0)
+                        {
+                            equipmentAppropriation += workplaceParameter.Priority;
+                        }
+                        else
+                        {
+                            double satisfactionCoefficient =
+                                (double) currentWorkplaceEquipment.Count / workplaceParameter.Count;
+                            satisfactionCoefficient = (satisfactionCoefficient > 1) ? 1 : satisfactionCoefficient;
+
+                            equipmentAppropriation += (satisfactionCoefficient * workplaceParameter.Priority);
+                        }
+                    }
+                }
+
+                if (!_workplaceParameters.Any() || _idealMark == 0)
+                {
+                    workplaceSearchingResult.EquipmentAppropriation = 100;
                 }
                 else
                 {
-                    resultingPercentage += (oneImportancePart * (1 - searchInstance.Importancy));
+                    workplaceSearchingResult.EquipmentAppropriation = equipmentAppropriation / _idealMark * 100;
                 }
+
+                if (buildingWorkplace.Cost == 0)
+                {
+                    workplaceSearchingResult.CostAppropriation = 100;
+                }
+                else
+                {
+                    workplaceSearchingResult.CostAppropriation =
+                        (double) _searchSetting.WantedCost / buildingWorkplace.Cost * 100;
+                }
+
+                buildingSearchingResult.WorkplaceSearchingResults.Add(workplaceSearchingResult);
             }
 
-            double costPercantage = (workplaceInRadius.Cost * 100 / wantedCost) - 100;
-
-            FindedWorkplace findedWorkplace = new FindedWorkplace(workplaceInRadius.Id, resultingPercentage, costPercantage);
-
-            return findedWorkplace;
-
+            return buildingSearchingResult;
         }
-
-        public List<FindedWorkplace> GetAllEstimatedWorkspacecInRadius(List<SearchingModel> searchingModel,
-            List<Workplace> workplaceInRadius, int wantedCost)
-        {
-            List<FindedWorkplace> findedWorkplaces = new List<FindedWorkplace>();
-            
-            foreach(Workplace workplace in workplaceInRadius)
-            {
-                findedWorkplaces.Add(GetAppropriationPercentage(searchingModel, workplace, wantedCost));
-            }
-
-            return findedWorkplaces;
-        }
-
-        public List<FindedWorkplace> PerformSearching(SearchingViewModel searchingViewModel)
-        {
-            List<int> buildingInRadius = SearchInRadius(searchingViewModel.Radius, searchingViewModel.X, 
-                searchingViewModel.Y);
-
-            List<Workplace> workplaceInRadius = workplaceDB.GetEntityList()
-                .Where(e => buildingInRadius.Contains(e.BuildingId)).ToList();
-
-            return GetAllEstimatedWorkspacecInRadius(searchingViewModel.SearchingModel, workplaceInRadius,
-                searchingViewModel.WantedCost);
-        }
-
     }
 }

@@ -49,7 +49,7 @@ namespace AAPZ_Backend.Controllers
            // if(client != null)
                 //return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == client.Id);
            // if(clientId != null)
-                return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == clientId);
+                return WorkplaceOrderDB.GetEntityListByClientId(clientId);
            // else return null;
         }
 

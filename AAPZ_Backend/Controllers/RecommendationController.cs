@@ -27,12 +27,12 @@ namespace AAPZ_Backend.Controllers
         [HttpPost("CalculateRecommendedTableHeight/{clientId}")]
         public IActionResult CalculateRecommendedTableHeight(int clientId)
         {
-            Client client = clientDB.GetEntity(clientId);
-            if (client == null)
-                return NotFound();
+            //Client client = clientDB.GetEntity(clientId);
+            //if (client == null)
+                //return NotFound();
             return new ObjectResult
                 (
-                HealthCareRecomendations.CalculateRecommendedTableHeight((double)client.Hight)
+                HealthCareRecomendations.CalculateRecommendedTableHeight((double)clientId)
                 );
         }
 
@@ -41,12 +41,12 @@ namespace AAPZ_Backend.Controllers
         [HttpPost("CalculateRecommendedChairHeight/{clientId}")]
         public IActionResult CalculateRecommendedChairHeight(int clientId)
         {
-            Client client = clientDB.GetEntity(clientId);
-            if (client == null)
-                return NotFound();
+            //Client client = clientDB.GetEntity(clientId);
+            //if (client == null)
+                //return NotFound();
             return new ObjectResult
                 (
-                HealthCareRecomendations.CalculateRecommendedChairHeight((double)client.Hight)
+                HealthCareRecomendations.CalculateRecommendedChairHeight((double)clientId)
                 );
         }
     }

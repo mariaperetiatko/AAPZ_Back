@@ -21,14 +21,25 @@ namespace AAPZ_Backend.Repositories
             return sheringDBContext.WorkplaceEquipment;
         }
 
+        public IEnumerable<WorkplaceEquipment> GetEntityListByClientId(int clientId)
+        {
+            throw new NotImplementedException();
+        }
+
         public WorkplaceEquipment GetEntity(object id)
         {
             return sheringDBContext.WorkplaceEquipment.SingleOrDefault(x => x.Id == (int)id);
         }
 
+        public IEnumerable<WorkplaceEquipment> GetWorkplaceEquipmentByWorkplace(int workplaceId)
+        {
+            return sheringDBContext.WorkplaceEquipment.Where(x => x.WorkplaceId == workplaceId);
+        }
+
         public void Create(WorkplaceEquipment workplaceEquipment)
         {
             sheringDBContext.WorkplaceEquipment.Add(workplaceEquipment);
+            sheringDBContext.SaveChanges();
         }
 
         //public Client GetClient(string tokenId)
@@ -40,6 +51,7 @@ namespace AAPZ_Backend.Repositories
         public void Update(WorkplaceEquipment workplaceEquipment)
         {
             sheringDBContext.Entry(workplaceEquipment).State = EntityState.Modified;
+            sheringDBContext.SaveChanges();
         }
 
         public void Delete(object id)
@@ -47,6 +59,7 @@ namespace AAPZ_Backend.Repositories
             WorkplaceEquipment workplaceEquipment = sheringDBContext.WorkplaceEquipment.Find(id);
             if (workplaceEquipment != null)
                 sheringDBContext.WorkplaceEquipment.Remove(workplaceEquipment);
+            sheringDBContext.SaveChanges();
         }
 
         public void Save()

@@ -46,7 +46,7 @@ namespace AAPZ_Backend.Controllers
 
         // POST api/<controller>
         [ProducesResponseType(typeof(Equipment), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpPost("CreateEquipment")]
         public IActionResult CreateEquipment([FromBody]Equipment Equipment)
         {

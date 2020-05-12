@@ -38,14 +38,14 @@ namespace AAPZ_Backend.Controllers
         [HttpGet("GetClientById/{id}")]
         public IActionResult GetClientById(int id)
         {
-           // string userJWTId = User.FindFirst("id")?.Value;
-            //Client client = clientDB.GetCurrentClient(id);
-            //if (client == null)
-            //{
-               Client client = clientDB.GetEntity(id);
-                if (client == null)
+           string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+            {
+               //Client client = clientDB.GetEntity(id);
+                //if (client == null)
                     return NotFound();
-            //}
+            }
             return new ObjectResult(client);
         }
 
