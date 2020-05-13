@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AAPZ_Backend.Repositories;
@@ -60,10 +61,22 @@ namespace AAPZ_Backend.Controllers
             //return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == client.Id);
             // if(clientId != null)
             return WorkplaceOrderDB.GetWorkplaceOrdersByWorkplaceId(workplaceId);
-            // else return null;
+          // else return null;
         }
 
-        
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetWorkplaceOrdersByWorkplaceAndDate/{workplaceId}/{date}")]
+        public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersByWorkplaceAndDate(int workplaceId, DateTime date)
+        {
+            //string userJWTId = User.FindFirst("id")?.Value;
+            //Client client = clientDB.GetCurrentClient(userJWTId);
+            // if(client != null)
+            //return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == client.Id);
+            // if(clientId != null)
+            return WorkplaceOrderDB.GetWorkplaceOrdersByWorkplaceAndDate(workplaceId, date);
+            // else return null;
+        }
         // GET api/<controller>/5
         [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
         [Authorize]
