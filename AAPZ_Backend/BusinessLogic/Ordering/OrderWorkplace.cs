@@ -23,8 +23,8 @@ namespace AAPZ_Backend.BusinessLogic.Ordering
 
         public bool isFree(int clientId, int workplaceId, DateTime startTime, DateTime finishTime)
         {
-            if (IsWorkplaceFree(workplaceId, startTime, finishTime)
-                && IsClientFree(clientId, startTime, finishTime))
+            if (IsWorkplaceFree(workplaceId, startTime, finishTime))
+                //&& IsClientFree(clientId, startTime, finishTime))
                 return true;
             return false;
         }
@@ -40,8 +40,8 @@ namespace AAPZ_Backend.BusinessLogic.Ordering
 
             foreach (var item in dict)
             {
-                bool isStartTimeBusy = startTime >= item.Key && startTime <= item.Value;
-                bool isFinishTimeBusy = finishTime >= item.Key && finishTime <= item.Value;
+                bool isStartTimeBusy = startTime >= item.Key && startTime < item.Value;
+                bool isFinishTimeBusy = finishTime > item.Key && finishTime <= item.Value;
                 bool isMiddletimeBusy = (startTime <= item.Key && finishTime >= item.Value);
 
                 if (isStartTimeBusy || isFinishTimeBusy || isMiddletimeBusy)

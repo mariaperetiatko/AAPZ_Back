@@ -36,9 +36,43 @@ namespace AAPZ_Backend.Repositories
                 .Where(x => x.StartTime.Year == date.Year
                         && x.StartTime.Month == date.Month
                         && x.StartTime.Day == date.Day
-                        && x.WorkplaceId == workplaceId);
+                        && x.WorkplaceId == workplaceId).OrderBy(x => x.StartTime);
         }
 
+
+        public IEnumerable<WorkplaceOrder> GetPreviousWorkplaceOrdersByClient(DateTime date, int clientId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Where(x => x.Client.Id == clientId
+                            && x.FinishTime <= DateTime.Now)
+                           .OrderBy(x => x.StartTime);
+        }
+
+        public IEnumerable<WorkplaceOrder> GetFutureWorkplaceOrdersByClient(DateTime date, int clientId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Where(x => x.Client.Id == clientId
+                            && x.StartTime >= DateTime.Now)
+                .OrderBy(x => x.StartTime);
+        }
+
+        public IEnumerable<WorkplaceOrder> GetFilteredWorkplaceOrdersByClient(DateTime startTime, DateTime finishTime, int clientId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Where(x => x.Client.Id == clientId
+                            && x.StartTime >= startTime
+                            && x.FinishTime <= finishTime)
+                .OrderBy(x => x.StartTime);
+        }
+
+        public IEnumerable<WorkplaceOrder> GetCurrentWorkplaceOrdersByClient(int clientId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Where(x => x.Client.Id == clientId
+                            && x.StartTime <= DateTime.Now
+                            && x.FinishTime >= DateTime.Now)
+                .OrderBy(x => x.StartTime);
+        }
 
         public WorkplaceOrder GetEntity(object id)
         {

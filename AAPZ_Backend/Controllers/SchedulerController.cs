@@ -32,9 +32,13 @@ namespace AAPZ_Backend.Controllers
         [HttpGet("GetSchedule/{clientId}")]
         public IActionResult GetSchedule(int clientId)
         {
-            Client client = clientDB.GetEntity(clientId);
-            List<WorkplaceOrder> workplaceOrders = workplaceOrderDB.GetEntityList()
-                .Where(x => x.ClientId == client.Id).ToList();
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+                return NotFound();
+
+            List<WorkplaceOrder> workplaceOrders = workplaceOrderDB.GetEntityListByClientId(client.Id).ToList();
+
             List<Scheduler> schedulers = new List<Scheduler>();
 
             foreach (WorkplaceOrder item in workplaceOrders)
@@ -42,7 +46,7 @@ namespace AAPZ_Backend.Controllers
                 Workplace workplace = workplaceDB.GetEntity(item.WorkplaceId);
                 Building building = buildingDB.GetEntity(workplace.BuildingId);
                 schedulers.Add(new Scheduler(item.Id.ToString(), item.StartTime.ToString("yyyy-MM-dd HH:mm:ss"), 
-                    item.FinishTime.ToString("yyyy-MM-dd HH:mm:ss"), "Addr:" + building.Country.ToString() + "," 
+                    item.FinishTime.ToString("yyyy-MM-dd HH:mm:ss"), "Name:"+building.Name+"\nAddr:" + building.Country.ToString() + "," 
                     + building.City.ToString() + "," + building.Street.ToString() + "," + building.House.ToString() 
                     + "," + building.Flat.ToString() + "\nWorkpl:" + workplace.Id.ToString()  + "\nPay:" 
                     + item.SumToPay.ToString(), item.SumToPay.ToString()));

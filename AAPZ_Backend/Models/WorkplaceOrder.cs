@@ -10,7 +10,7 @@ namespace AAPZ_Backend.Models
         public int WorkplaceId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime FinishTime { get; set; }
-        public int SumToPay { get; set; }
+        public double SumToPay { get; set; }
 
         public Client Client { get; set; }
         public Workplace Workplace { get; set; }

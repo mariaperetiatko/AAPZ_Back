@@ -9,6 +9,12 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AAPZ_Backend.Controllers
 {
+    public class DateFilter
+    {
+        public DateTime? StartTime { get; set; }
+        public DateTime? FinishTime { get; set; }
+    }
+
     [Produces("application/json")]
     [Route("api/WorkplaceOrder")]
     public class WorkplaceOrderController : Controller
@@ -40,13 +46,31 @@ namespace AAPZ_Backend.Controllers
         [HttpGet("GetWorkplaceOrdersListByClient/{clientId}")]
         public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersListByClient(int clientId)
         {
-            //string userJWTId = User.FindFirst("id")?.Value;
-            //Client client = clientDB.GetCurrentClient(userJWTId);
-           // if(client != null)
-                //return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == client.Id);
-           // if(clientId != null)
-                return WorkplaceOrderDB.GetEntityListByClientId(clientId);
-           // else return null;
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+                return null;
+            return WorkplaceOrderDB.GetEntityListByClientId(clientId);
+        }
+
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetFilteredWorkplaceOrdersListByClient")]
+        public IEnumerable<WorkplaceOrder> GetFilteredWorkplaceOrdersListByClient([FromQuery]DateFilter filter)
+        {
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+                return null;
+
+            if (filter == null || (filter.StartTime == null && filter.FinishTime == null))
+                WorkplaceOrderDB.GetEntityListByClientId(client.Id);
+            if (filter.StartTime == null)
+                return WorkplaceOrderDB.GetPreviousWorkplaceOrdersByClient((DateTime)filter.FinishTime, client.Id);
+            if (filter.FinishTime == null)
+                return WorkplaceOrderDB.GetFutureWorkplaceOrdersByClient((DateTime)filter.StartTime, client.Id);
+            
+            return WorkplaceOrderDB.GetFilteredWorkplaceOrdersByClient((DateTime)filter.StartTime, (DateTime)filter.FinishTime, client.Id);
         }
 
         // GET: api/<controller>
@@ -69,14 +93,10 @@ namespace AAPZ_Backend.Controllers
         [HttpGet("GetWorkplaceOrdersByWorkplaceAndDate/{workplaceId}/{date}")]
         public IEnumerable<WorkplaceOrder> GetWorkplaceOrdersByWorkplaceAndDate(int workplaceId, DateTime date)
         {
-            //string userJWTId = User.FindFirst("id")?.Value;
-            //Client client = clientDB.GetCurrentClient(userJWTId);
-            // if(client != null)
-            //return WorkplaceOrderDB.GetEntityList().Where(x => x.ClientId == client.Id);
-            // if(clientId != null)
             return WorkplaceOrderDB.GetWorkplaceOrdersByWorkplaceAndDate(workplaceId, date);
-            // else return null;
         }
+
+
         // GET api/<controller>/5
         [ProducesResponseType(typeof(WorkplaceOrder), StatusCodes.Status200OK)]
         [Authorize]
@@ -95,16 +115,16 @@ namespace AAPZ_Backend.Controllers
         [HttpPost("CreateWorkplaceOrder")]
         public IActionResult CreateWorkplaceOrder([FromBody]WorkplaceOrder WorkplaceOrder)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+                return NotFound();
 
-            
-            if(OrderWorkplace.isFree(WorkplaceOrder.ClientId, WorkplaceOrder.WorkplaceId,
+            WorkplaceOrder.ClientId = client.Id;
+            if (OrderWorkplace.isFree(WorkplaceOrder.ClientId, WorkplaceOrder.WorkplaceId,
                 WorkplaceOrder.StartTime, WorkplaceOrder.FinishTime))
             {
-                WorkplaceOrder.SumToPay = (int)OrderWorkplace.CreateOrder(WorkplaceOrder.ClientId, WorkplaceOrder.WorkplaceId,
+                WorkplaceOrder.SumToPay = OrderWorkplace.CreateOrder(WorkplaceOrder.ClientId, WorkplaceOrder.WorkplaceId,
                 WorkplaceOrder.StartTime, WorkplaceOrder.FinishTime);
 
                 WorkplaceOrderDB.Create(WorkplaceOrder);
@@ -115,7 +135,7 @@ namespace AAPZ_Backend.Controllers
                 return Ok(WorkplaceOrder);
 
             }
-            return Ok("Busy");
+            return BadRequest();
         }
 
         // PUT api/<controller>
