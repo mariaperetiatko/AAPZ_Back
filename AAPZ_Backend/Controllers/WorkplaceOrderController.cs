@@ -6,6 +6,7 @@ using AAPZ_Backend.Repositories;
 using AAPZ_Backend.BusinessLogic.Ordering;
 using AAPZ_Backend.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace AAPZ_Backend.Controllers
 {
@@ -13,6 +14,12 @@ namespace AAPZ_Backend.Controllers
     {
         public DateTime? StartTime { get; set; }
         public DateTime? FinishTime { get; set; }
+    }
+
+    public class FilteredPagedResult
+    {
+        public IEnumerable<WorkplaceOrder> WorkplaceOrders { get; set; }
+        public int TotalCount { get; set; }
     }
 
     [Produces("application/json")]
@@ -50,27 +57,64 @@ namespace AAPZ_Backend.Controllers
             Client client = clientDB.GetCurrentClient(userJWTId);
             if (client == null)
                 return null;
-            return WorkplaceOrderDB.GetEntityListByClientId(clientId);
+            return WorkplaceOrderDB.GetEntityListByClientId(client.Id);
         }
 
-        [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FilteredPagedResult), StatusCodes.Status200OK)]
         [Authorize]
-        [HttpGet("GetFilteredWorkplaceOrdersListByClient")]
-        public IEnumerable<WorkplaceOrder> GetFilteredWorkplaceOrdersListByClient([FromQuery]DateFilter filter)
+        [HttpGet("GetFilteredWorkplaceOrdersListByClient/{pageNumber}")]
+        public FilteredPagedResult GetFilteredWorkplaceOrdersListByClient([FromQuery]DateFilter filter, int pageNumber)
         {
             string userJWTId = User.FindFirst("id")?.Value;
             Client client = clientDB.GetCurrentClient(userJWTId);
             if (client == null)
                 return null;
 
+            int take = 5;
+            int skip = (pageNumber - 1) * take;
+
+            IEnumerable<WorkplaceOrder> workplaceOrders;
+            int totalCount = 0;
+
             if (filter == null || (filter.StartTime == null && filter.FinishTime == null))
-                WorkplaceOrderDB.GetEntityListByClientId(client.Id);
-            if (filter.StartTime == null)
-                return WorkplaceOrderDB.GetPreviousWorkplaceOrdersByClient((DateTime)filter.FinishTime, client.Id);
-            if (filter.FinishTime == null)
-                return WorkplaceOrderDB.GetFutureWorkplaceOrdersByClient((DateTime)filter.StartTime, client.Id);
-            
-            return WorkplaceOrderDB.GetFilteredWorkplaceOrdersByClient((DateTime)filter.StartTime, (DateTime)filter.FinishTime, client.Id);
+            {
+                workplaceOrders = WorkplaceOrderDB.GetCurrentWorkplaceOrdersByClient(client.Id, skip, take);
+                totalCount = WorkplaceOrderDB.GetCurrentWorkplaceOrdersByClientCount(client.Id);
+            }
+            else if (filter.StartTime == null)
+            {
+                workplaceOrders = WorkplaceOrderDB.GetPreviousWorkplaceOrdersByClient
+                    ((DateTime) filter.FinishTime, client.Id, skip, take);
+                totalCount =
+                    WorkplaceOrderDB.GetPreviousWorkplaceOrdersByClientCount((DateTime) filter.FinishTime, client.Id);
+            }
+            else if (filter.FinishTime == null)
+            {
+                workplaceOrders = WorkplaceOrderDB.GetFutureWorkplaceOrdersByClient
+                    ((DateTime)filter.StartTime, client.Id, skip, take);
+                totalCount =
+                    WorkplaceOrderDB.GetFutureWorkplaceOrdersByClientCount((DateTime) filter.StartTime, client.Id);
+            }
+            else 
+            {
+                workplaceOrders = WorkplaceOrderDB.GetFilteredWorkplaceOrdersByClient
+                    ((DateTime)filter.StartTime, (DateTime)filter.FinishTime, client.Id, skip, take);
+                totalCount = WorkplaceOrderDB.GetFilteredWorkplaceOrdersByClientCount
+                    ((DateTime) filter.StartTime, (DateTime) filter.FinishTime, client.Id);
+            }
+
+            double pageDecimal = (double) totalCount / take;
+            int pageCount = totalCount / take;
+
+            if (pageDecimal - (double) pageCount != 0.0)
+                pageCount++;
+               
+            return new FilteredPagedResult
+            {
+                WorkplaceOrders = workplaceOrders,
+                TotalCount = pageCount
+            };
+
         }
 
         // GET: api/<controller>

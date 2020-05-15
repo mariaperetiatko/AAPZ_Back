@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using AAPZ_Backend.Models;
 using AAPZ_Backend.Models.Tokens;
-using AAPZ_Backend.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
@@ -23,10 +17,7 @@ using FluentValidation.AspNetCore;
 using AAPZ_Backend.Auth;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace AAPZ_Backend
@@ -62,7 +53,7 @@ namespace AAPZ_Backend
                 });
             });
 
-            var connection = @"Server=DESKTOP-LLK7E72\DEVELOPERSQL;Database=SheringDB;User Id=m;Password=1";
+            var connection = @"Server=DESKTOP-LLK7E72\DEVELOPERSQL;Database=SheringDB;User Id=m;Password=1"; //Trusted_Connection=True; ";
             services.AddDbContext<SheringDBContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<SheringDBContext>();

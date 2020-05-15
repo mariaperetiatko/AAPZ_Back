@@ -40,38 +40,84 @@ namespace AAPZ_Backend.Repositories
         }
 
 
-        public IEnumerable<WorkplaceOrder> GetPreviousWorkplaceOrdersByClient(DateTime date, int clientId)
+        public IEnumerable<WorkplaceOrder> GetPreviousWorkplaceOrdersByClient(DateTime date, int clientId, int skip, int take)
         {
             return sheringDBContext.WorkplaceOrder
                 .Where(x => x.Client.Id == clientId
                             && x.FinishTime <= DateTime.Now)
+                .Skip(skip)
+                .Take(take)
+                .Include(x => x.Workplace)
+                .ThenInclude(x => x.Building)
                            .OrderBy(x => x.StartTime);
         }
 
-        public IEnumerable<WorkplaceOrder> GetFutureWorkplaceOrdersByClient(DateTime date, int clientId)
+        public int GetPreviousWorkplaceOrdersByClientCount(DateTime date, int clientId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Count(x => x.Client.Id == clientId
+                            && x.FinishTime <= DateTime.Now);
+        }
+
+        public IEnumerable<WorkplaceOrder> GetFutureWorkplaceOrdersByClient(DateTime date, int clientId, int skip, int take)
         {
             return sheringDBContext.WorkplaceOrder
                 .Where(x => x.Client.Id == clientId
                             && x.StartTime >= DateTime.Now)
+                .Skip(skip)
+                .Take(take)
+                .Include(x => x.Workplace)
+                .ThenInclude(x => x.Building)
                 .OrderBy(x => x.StartTime);
         }
 
-        public IEnumerable<WorkplaceOrder> GetFilteredWorkplaceOrdersByClient(DateTime startTime, DateTime finishTime, int clientId)
+        public int GetFutureWorkplaceOrdersByClientCount(DateTime date, int clientId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Count(x => x.Client.Id == clientId
+                            && x.StartTime >= DateTime.Now);
+        }
+
+        public IEnumerable<WorkplaceOrder> GetFilteredWorkplaceOrdersByClient(DateTime startTime, DateTime finishTime, int clientId, int skip, int take)
         {
             return sheringDBContext.WorkplaceOrder
                 .Where(x => x.Client.Id == clientId
                             && x.StartTime >= startTime
                             && x.FinishTime <= finishTime)
+                .Skip(skip)
+                .Take(take)
+                .Include(x => x.Workplace)
+                .ThenInclude(x => x.Building)
                 .OrderBy(x => x.StartTime);
         }
 
-        public IEnumerable<WorkplaceOrder> GetCurrentWorkplaceOrdersByClient(int clientId)
+        public int GetFilteredWorkplaceOrdersByClientCount(DateTime startTime, DateTime finishTime, int clientId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Count(x => x.Client.Id == clientId
+                            && x.StartTime >= startTime
+                            && x.FinishTime <= finishTime);
+        }
+
+        public IEnumerable<WorkplaceOrder> GetCurrentWorkplaceOrdersByClient(int clientId, int skip, int take)
         {
             return sheringDBContext.WorkplaceOrder
                 .Where(x => x.Client.Id == clientId
                             && x.StartTime <= DateTime.Now
                             && x.FinishTime >= DateTime.Now)
+                .Skip(skip)
+                .Take(take)
+                .Include(x => x.Workplace)
+                .ThenInclude(x => x.Building)
                 .OrderBy(x => x.StartTime);
+        }
+
+        public int GetCurrentWorkplaceOrdersByClientCount(int clientId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Count(x => x.Client.Id == clientId
+                            && x.StartTime <= DateTime.Now
+                            && x.FinishTime >= DateTime.Now);
         }
 
         public WorkplaceOrder GetEntity(object id)
