@@ -14,6 +14,7 @@ namespace AAPZ_Backend.Controllers
     {
         public DateTime? StartTime { get; set; }
         public DateTime? FinishTime { get; set; }
+        public string Like { get; set; }
     }
 
     public class FilteredPagedResult
@@ -70,12 +71,12 @@ namespace AAPZ_Backend.Controllers
             if (client == null)
                 return null;
 
-            int take = 5;
+            int take = 3;
             int skip = (pageNumber - 1) * take;
 
             IEnumerable<WorkplaceOrder> workplaceOrders;
             int totalCount = 0;
-
+            string likeString = (String.IsNullOrEmpty(filter.Like)) ? null : filter.Like;
             if (filter == null || (filter.StartTime == null && filter.FinishTime == null))
             {
                 workplaceOrders = WorkplaceOrderDB.GetCurrentWorkplaceOrdersByClient(client.Id, skip, take);
@@ -90,17 +91,18 @@ namespace AAPZ_Backend.Controllers
             }
             else if (filter.FinishTime == null)
             {
+                
                 workplaceOrders = WorkplaceOrderDB.GetFutureWorkplaceOrdersByClient
-                    ((DateTime)filter.StartTime, client.Id, skip, take);
+                    ((DateTime)filter.StartTime, client.Id, skip, take, likeString);
                 totalCount =
-                    WorkplaceOrderDB.GetFutureWorkplaceOrdersByClientCount((DateTime) filter.StartTime, client.Id);
+                    WorkplaceOrderDB.GetFutureWorkplaceOrdersByClientCount((DateTime) filter.StartTime, client.Id, likeString);
             }
             else 
             {
                 workplaceOrders = WorkplaceOrderDB.GetFilteredWorkplaceOrdersByClient
-                    ((DateTime)filter.StartTime, (DateTime)filter.FinishTime, client.Id, skip, take);
+                    ((DateTime)filter.StartTime, (DateTime)filter.FinishTime, client.Id, skip, take, likeString);
                 totalCount = WorkplaceOrderDB.GetFilteredWorkplaceOrdersByClientCount
-                    ((DateTime) filter.StartTime, (DateTime) filter.FinishTime, client.Id);
+                    ((DateTime) filter.StartTime, (DateTime) filter.FinishTime, client.Id, likeString);
             }
 
             double pageDecimal = (double) totalCount / take;

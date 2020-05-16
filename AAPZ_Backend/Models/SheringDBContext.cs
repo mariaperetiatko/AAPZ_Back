@@ -28,6 +28,7 @@ namespace AAPZ_Backend
         public virtual DbSet<Distance> Diastance { get; set; }
         public virtual DbSet<WorkplaceParameter> WorkplaceParameter { get; set; }
         public virtual DbSet<SearchSetting> SearchSetting { get; set; }
+        public virtual DbSet<Monitoring> Monitoring { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

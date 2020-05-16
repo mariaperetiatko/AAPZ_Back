@@ -40,6 +40,7 @@ namespace AAPZ_Backend.Controllers
         {
             Distance distance = new Distance()
             {
+                ClientId = 1008,
                 DistanceValue = id,
                 Date = DateTime.Now
             };

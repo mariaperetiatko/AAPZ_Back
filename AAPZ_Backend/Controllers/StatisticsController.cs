@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AAPZ_Backend.Models;
-using AAPZ_Backend.BusinessLogic.Classes;
 using AAPZ_Backend.BusinessLogic.Statistics;
+using AAPZ_Backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AAPZ_Backend.Controllers
@@ -16,10 +13,15 @@ namespace AAPZ_Backend.Controllers
     public class StatisticsController : ControllerBase
     {
         WorkplaceStatistics workplaceStatistics;
+        private ClientsWorkplaceStatistic clientsWorkplaceStatistic;
+        ClientRepository clientDB;
 
-        public StatisticsController()
+
+        public StatisticsController(ClientRepository clientRepository)
         {
             workplaceStatistics = new WorkplaceStatistics();
+            clientsWorkplaceStatistic = new ClientsWorkplaceStatistic();
+            clientDB = clientRepository;
         }
 
         [ProducesResponseType(typeof(Dictionary<int, double>), StatusCodes.Status200OK)]
@@ -46,7 +48,43 @@ namespace AAPZ_Backend.Controllers
             return new ObjectResult(workplaceStatistics.GetAverageStatisticsByWeek(buildingId));
         }
 
+        [ProducesResponseType(typeof(Dictionary<int, double>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetClientStatisticsByYear")]
+        public IActionResult GetClientStatisticsByYear()
+        {
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+                return null;
 
+            return new ObjectResult(clientsWorkplaceStatistic.GetStatisticsByYear(client.Id));
+        }
 
+        [ProducesResponseType(typeof(Dictionary<int, double>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetClientStatisticsByMonth")]
+        public IActionResult GetClientStatisticsByMonth()
+        {
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+                return null;
+
+            return new ObjectResult(clientsWorkplaceStatistic.GetStatisticsByMonth(client.Id));
+        }
+
+        [ProducesResponseType(typeof(Dictionary<int, double>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetClientStatisticsByWeek")]
+        public IActionResult GetClientStatisticsByWeek()
+        {
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+                return null;
+
+            return new ObjectResult(clientsWorkplaceStatistic.GetStatisticsByWeek(client.Id));
+        }
     }
 }
