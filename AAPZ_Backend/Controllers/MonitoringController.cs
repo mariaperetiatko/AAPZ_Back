@@ -37,6 +37,20 @@ namespace AAPZ_Backend.Controllers
 
         [ProducesResponseType(typeof(IEnumerable<Monitoring>), StatusCodes.Status200OK)]
         [Authorize]
+        [HttpGet("GetLastMonitorings")]
+        public IActionResult GetLastMonitorings()
+        {
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+                return NotFound();
+            db.GenerateMonitoring(client.Id);
+
+            return Ok(db.GetLastMonitorings(client.Id));
+        }
+
+        [ProducesResponseType(typeof(IEnumerable<Monitoring>), StatusCodes.Status200OK)]
+        [Authorize]
         [HttpGet("GetMonitoringList")]
         public IActionResult GetMonitoringList()
         {

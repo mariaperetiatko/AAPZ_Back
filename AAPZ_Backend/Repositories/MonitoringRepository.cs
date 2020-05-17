@@ -29,6 +29,14 @@ namespace AAPZ_Backend.Repositories
                                                                    && y.Date.Day == date.Day);
         }
 
+        public IEnumerable<Monitoring> GetLastMonitorings(int clientId)
+        {
+            return sheringDBContext.Monitoring
+                .Where(y => y.ClientId == clientId)
+                .OrderByDescending(x => x.Date)
+                .Take(5);
+        }
+
         public void GenerateMonitoring(int clientId)
         {
             DateTime curDate = DateTime.Now;

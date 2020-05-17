@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AAPZ_Backend;
 using AAPZ_Backend.Repositories;
 using AAPZ_Backend.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +11,7 @@ namespace AAPZ_Backend.Controllers
     [Route("api/Landlord")]
     public class LandlordController : Controller
     {
-        IDBActions<Landlord> LandlordDB;
+        LandlordRepository LandlordDB;
 
         public LandlordController()
         {
@@ -38,10 +33,16 @@ namespace AAPZ_Backend.Controllers
         [HttpGet("GetLandlordById/{id}")]
         public IActionResult GetLandlordById(int id)
         {
-            Landlord Landlord = LandlordDB.GetEntity(id);
-            if (Landlord == null)
+            string userJWTId = User.FindFirst("id")?.Value;
+            Landlord landlord = LandlordDB.GetCurrentLandlord(userJWTId);
+            if (landlord == null)
+            {
+                //Client client = clientDB.GetEntity(id);
+                //if (client == null)
                 return NotFound();
-            return new ObjectResult(Landlord);
+            }
+          
+            return new ObjectResult(landlord);
         }
 
         // POST api/<controller>
@@ -61,7 +62,7 @@ namespace AAPZ_Backend.Controllers
 
         // PUT api/<controller>
         [ProducesResponseType(typeof(Landlord), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPut("UpdateLandlord")]
         public IActionResult UpdateLandlord([FromBody]Landlord Landlord)
         {
@@ -76,7 +77,7 @@ namespace AAPZ_Backend.Controllers
 
         // DELETE api/<controller>/5
         [ProducesResponseType(typeof(Landlord), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpDelete("DeleteLandlord/{id}")]
         public IActionResult DeleteLandlord(int id)
         {

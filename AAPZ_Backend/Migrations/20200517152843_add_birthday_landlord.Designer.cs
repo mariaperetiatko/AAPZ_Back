@@ -4,14 +4,16 @@ using AAPZ_Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AAPZ_Backend.Migrations
 {
     [DbContext(typeof(SheringDBContext))]
-    partial class SheringDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200517152843_add_birthday_landlord")]
+    partial class add_birthday_landlord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,7 +178,7 @@ namespace AAPZ_Backend.Migrations
 
                     b.Property<long>("PassportNumber");
 
-                    b.Property<string>("Phone");
+                    b.Property<long>("Phone");
 
                     b.HasKey("Id");
 

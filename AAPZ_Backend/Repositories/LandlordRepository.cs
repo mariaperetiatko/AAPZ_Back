@@ -21,7 +21,7 @@ namespace AAPZ_Backend.Repositories
         {
             return sheringDBContext.Landlord;
         }
-
+        
         public IEnumerable<Landlord> GetEntityListByClientId(int clientId)
         {
             throw new NotImplementedException();
@@ -81,6 +81,12 @@ namespace AAPZ_Backend.Repositories
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public Landlord GetCurrentLandlord(string tokenId)
+        {
+            Landlord landlord = sheringDBContext.Landlord.Where(x => x.IdentityId == tokenId).FirstOrDefault();
+            return landlord;
         }
     }
 }

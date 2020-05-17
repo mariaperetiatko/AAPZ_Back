@@ -77,6 +77,37 @@ namespace AAPZ_Backend.Controllers
 
                 return new OkObjectResult("Account created");
             }
+            else if (model.Role == "restaurantOwner")
+            {
+
+                Landlord landlord = new Landlord()
+                {
+                    IdentityId = userIdentity.Id,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Phone = model.Phone,
+                    IsInBlackList = 0,
+                    Email = model.Email,
+                    Birthday = model.Birthday,
+                    PassportNumber = model.PassportNumber
+
+                };
+                await _appDbContext.Landlord.AddAsync(landlord);
+
+                //Customer cust = _appDbContext.Customer.Where(x => x.IdentityId == customer.IdentityId)
+                //    .SingleOrDefault();
+
+                try
+                {
+                    var x = await _appDbContext.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return new ObjectResult(e.Message);
+                };
+
+                return new OkObjectResult("Account created");
+            }
             return new OkObjectResult("Last");
 
         }

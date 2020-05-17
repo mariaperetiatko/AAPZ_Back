@@ -20,6 +20,19 @@ namespace AAPZ_Backend.Repositories
             return sheringDBContext.Building;
         }
 
+        public IEnumerable<Building> GetBuildingsByLandlord(int landlordId)
+        {
+            return sheringDBContext.Building
+                .Where(x => x.LandlordId == landlordId);
+            //.Skip(skip)
+            //.Take(take);
+        }
+
+        public int GetBuildingsCountByLandlord(int landlordId)
+        {
+            return sheringDBContext.Building.Count(x => x.LandlordId == landlordId);
+        }
+
         public IEnumerable<Building> GetBuildingsInRadius(double maxX, double minX, double maxY, double minY)
         {
             return sheringDBContext.Building.Where(b => b.X <= maxX && b.X >= minX && b.Y <= maxY && b.Y >= minY);

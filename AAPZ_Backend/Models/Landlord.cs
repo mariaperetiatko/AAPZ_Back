@@ -14,8 +14,9 @@ namespace AAPZ_Backend.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public DateTime Birthday { get; set; }
         public long PassportNumber { get; set; }
-        public long Phone { get; set; }
+        public string Phone { get; set; }
         public string Email { get; set; }
         public int IsInBlackList { get; set; }
         public string IdentityId { get; set; }

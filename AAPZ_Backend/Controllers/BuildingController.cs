@@ -7,15 +7,23 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AAPZ_Backend.Controllers
 {
+    public class FilteredPagedBuildingsResult
+    {
+        public IEnumerable<Building> Buildings { get; set; }
+        public int TotalCount { get; set; }
+    }
+
     [Produces("application/json")]
     [Route("api/Building")]
     public class BuildingController : Controller
     {
-        IDBActions<Building> BuildingDB;
+        BuildingRepository BuildingDB;
+        LandlordRepository LandlordDB;
 
         public BuildingController()
         {
             BuildingDB = new BuildingRepository();
+            LandlordDB = new LandlordRepository();
         }
 
         [Authorize]
@@ -25,6 +33,26 @@ namespace AAPZ_Backend.Controllers
         public IEnumerable<Building> GetBuildingsList()
         {
             return BuildingDB.GetEntityList();
+        }
+
+        [Authorize]
+        // GET: api/<controller>
+        [ProducesResponseType(typeof(IEnumerable<Building>), StatusCodes.Status200OK)]
+        [HttpGet("GetBuildingsByLandlord")]
+        public IEnumerable<Building> GetBuildingsByLandlord()
+        {
+            string userJWTId = User.FindFirst("id")?.Value;
+            Landlord landlord = LandlordDB.GetCurrentLandlord(userJWTId);
+            if (landlord == null)
+            {
+                return null;
+            }
+
+            //int take = 10;
+            //int skip = (pageNumber - 1) * take;
+            //int totalCount = BuildingDB.GetBuildingsCountByLandlord(landlord.Id);
+
+            return BuildingDB.GetBuildingsByLandlord(landlord.Id);
         }
 
         // GET api/<controller>/5
