@@ -69,22 +69,26 @@ namespace AAPZ_Backend.Controllers
 
         // POST api/<controller>
         [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPost("CreateBuilding")]
         [Authorize]
         public IActionResult CreateBuilding([FromBody]Building Building)
         {
-            if (!ModelState.IsValid)
+            string userJWTId = User.FindFirst("id")?.Value;
+            Landlord landlord = LandlordDB.GetCurrentLandlord(userJWTId);
+            if (landlord == null)
             {
-                return BadRequest();
+                return NotFound();
             }
+
+            Building.LandlordId = landlord.Id;
             BuildingDB.Create(Building);
             return Ok(Building);
         }
 
         // PUT api/<controller>
         [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
-        //[Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPut("UpdateBuilding")]
         public IActionResult UpdateBuilding([FromBody]Building Building)
         {
