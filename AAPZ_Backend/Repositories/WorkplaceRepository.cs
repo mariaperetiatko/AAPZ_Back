@@ -29,8 +29,28 @@ namespace AAPZ_Backend.Repositories
 
         public Workplace GetEntity(object id)
         {
-            return sheringDBContext.Workplace.Include(x => x.Building)
+            return sheringDBContext.Workplace.Include(x => x.WorkplaceEquipment).Include(x => x.Building)
                 .ThenInclude(y => y.Landlord).SingleOrDefault(x => x.Id == (int) id);
+        }
+
+
+        public IEnumerable<Workplace> GetPagedWorkplacesByBuildingId(int buildingId, int skip, int take)
+        {
+
+            return sheringDBContext.Workplace
+                .Where(x => x.BuildingId == buildingId)
+                .OrderBy(x => x.Id)
+                .Skip(skip)
+                .Take(take)
+                .Include(x => x.WorkplaceEquipment)
+                .ThenInclude(x => x.Equipment);
+        }
+
+
+        public int GetWorkplacesByBuildingIdCount(int buildingId)
+        {
+            return sheringDBContext.Workplace
+                .Count(x => x.BuildingId == buildingId);
         }
 
         public IEnumerable<Workplace> GetWorkplacesByBuildingId(int buildingId)

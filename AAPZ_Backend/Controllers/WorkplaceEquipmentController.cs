@@ -63,7 +63,7 @@ namespace AAPZ_Backend.Controllers
 
         // POST api/<controller>
         [ProducesResponseType(typeof(WorkplaceEquipment), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPost("CreateWorkplaceEquipment")]
         public IActionResult CreateWorkplaceEquipment([FromBody]WorkplaceEquipment WorkplaceEquipment)
         {
@@ -78,7 +78,7 @@ namespace AAPZ_Backend.Controllers
 
         // PUT api/<controller>
         [ProducesResponseType(typeof(WorkplaceEquipment), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPut("UpdateWorkplaceEquipment")]
         public IActionResult UpdateWorkplaceEquipment([FromBody]WorkplaceEquipment WorkplaceEquipment)
         {
@@ -93,7 +93,7 @@ namespace AAPZ_Backend.Controllers
 
         // DELETE api/<controller>/5
         [ProducesResponseType(typeof(WorkplaceEquipment), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpDelete("DeleteWorkplaceEquipment/{id}")]
         public IActionResult DeleteWorkplaceEquipment(int id)
         {

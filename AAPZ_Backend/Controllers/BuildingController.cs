@@ -69,7 +69,6 @@ namespace AAPZ_Backend.Controllers
 
         // POST api/<controller>
         [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
-        [Authorize]
         [HttpPost("CreateBuilding")]
         [Authorize]
         public IActionResult CreateBuilding([FromBody]Building Building)
@@ -102,7 +101,7 @@ namespace AAPZ_Backend.Controllers
 
         // DELETE api/<controller>/5
         [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpDelete("DeleteBuilding/{id}")]
         public IActionResult DeleteBuilding(int id)
         {

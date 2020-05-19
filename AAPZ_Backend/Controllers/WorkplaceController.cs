@@ -12,11 +12,17 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AAPZ_Backend.Controllers
 {
+    public class WorkplacePagedResult
+    {
+        public IEnumerable<Workplace> Workplaces { get; set; }
+        public int TotalCount { get; set; }
+    }
+
     [Produces("application/json")]
     [Route("api/Workplace")]
     public class WorkplaceController : Controller
     {
-        IDBActions<Workplace> WorkplaceDB;
+        WorkplaceRepository WorkplaceDB;
 
         public WorkplaceController()
         {
@@ -30,6 +36,33 @@ namespace AAPZ_Backend.Controllers
         public IEnumerable<Workplace> GetWorkplacesList()
         {
             return WorkplaceDB.GetEntityList();
+        }
+
+
+        [ProducesResponseType(typeof(WorkplacePagedResult), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetPagedWorkplacesByBuildingId/{buildingId}/{pageNumber}")]
+        public WorkplacePagedResult GetPagedWorkplacesByBuildingId(int buildingId, int pageNumber)
+        {
+            int take = 3;
+            int skip = (pageNumber - 1) * take;
+
+            IEnumerable<Workplace> workplaces = WorkplaceDB.GetPagedWorkplacesByBuildingId(buildingId, skip, take);
+            int totalCount = WorkplaceDB.GetWorkplacesByBuildingIdCount(buildingId);
+            
+
+            double pageDecimal = (double)totalCount / take;
+            int pageCount = totalCount / take;
+
+            if (pageDecimal - (double)pageCount != 0.0)
+                pageCount++;
+
+            return new WorkplacePagedResult
+            {
+                Workplaces = workplaces,
+                TotalCount = pageCount
+            };
+
         }
 
         // GET api/<controller>/5
