@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AAPZ_Backend.Models;
 
@@ -29,10 +28,13 @@ namespace AAPZ_Backend.Repositories
 
         public Workplace GetEntity(object id)
         {
-            return sheringDBContext.Workplace.Include(x => x.WorkplaceEquipment).Include(x => x.Building)
-                .ThenInclude(y => y.Landlord).SingleOrDefault(x => x.Id == (int) id);
+            return sheringDBContext.Workplace
+                .Include(x => x.WorkplaceEquipment)
+                .ThenInclude(x => x.Equipment)
+                .Include(x => x.Building)
+                .ThenInclude(y => y.Landlord)
+                .SingleOrDefault(x => x.Id == (int) id);
         }
-
 
         public IEnumerable<Workplace> GetPagedWorkplacesByBuildingId(int buildingId, int skip, int take)
         {

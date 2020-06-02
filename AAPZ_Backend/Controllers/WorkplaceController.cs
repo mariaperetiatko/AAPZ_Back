@@ -79,7 +79,7 @@ namespace AAPZ_Backend.Controllers
 
         // POST api/<controller>
         [ProducesResponseType(typeof(Workplace), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPost("CreateWorkplace")]
         public IActionResult CreateWorkplace([FromBody]Workplace Workplace)
         {
@@ -94,7 +94,7 @@ namespace AAPZ_Backend.Controllers
 
         // PUT api/<controller>
         [ProducesResponseType(typeof(Workplace), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPut("UpdateWorkplace")]
         public IActionResult UpdateWorkplace([FromBody]Workplace Workplace)
         {
@@ -109,7 +109,7 @@ namespace AAPZ_Backend.Controllers
 
         // DELETE api/<controller>/5
         [ProducesResponseType(typeof(Workplace), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpDelete("DeleteWorkplace/{id}")]
         public IActionResult DeleteWorkplace(int id)
         {

@@ -67,12 +67,7 @@ namespace AAPZ_Backend.Controllers
         [HttpPost("CreateWorkplaceEquipment")]
         public IActionResult CreateWorkplaceEquipment([FromBody]WorkplaceEquipment WorkplaceEquipment)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             WorkplaceEquipmentDB.Create(WorkplaceEquipment);
-            WorkplaceEquipmentDB.Save();
             return Ok(WorkplaceEquipment);
         }
 

@@ -134,6 +134,23 @@ namespace AAPZ_Backend.Controllers
           // else return null;
         }
 
+        
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetPreviousWorkplaceOrdersByWorkplace/{workplaceId}")]
+        public IEnumerable<WorkplaceOrder> GetPreviousWorkplaceOrdersByWorkplace(int workplaceId)
+        {           
+            return WorkplaceOrderDB.GetPreviousWorkplaceOrdersByWorkplace(workplaceId);
+        }
+
+        [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetFutureWorkplaceOrdersByWorkplace/{workplaceId}")]
+        public IEnumerable<WorkplaceOrder> GetFutureWorkplaceOrdersByWorkplace(int workplaceId)
+        {
+            return WorkplaceOrderDB.GetFutureWorkplaceOrdersByWorkplace(workplaceId);
+        }
+
         [ProducesResponseType(typeof(IEnumerable<WorkplaceOrder>), StatusCodes.Status200OK)]
         [Authorize]
         [HttpGet("GetWorkplaceOrdersByWorkplaceAndDate/{workplaceId}/{date}")]

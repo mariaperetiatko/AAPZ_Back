@@ -62,6 +62,22 @@ namespace AAPZ_Backend.Repositories
                             && x.FinishTime <= DateTime.Now);
         }
 
+        public IEnumerable<WorkplaceOrder> GetPreviousWorkplaceOrdersByWorkplace(long workplaceId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Where(x => x.WorkplaceId == workplaceId
+                            && x.StartTime <= DateTime.Now)
+                .Include(x => x.Client);
+        }
+
+        public IEnumerable<WorkplaceOrder> GetFutureWorkplaceOrdersByWorkplace(long workplaceId)
+        {
+            return sheringDBContext.WorkplaceOrder
+                .Where(x => x.WorkplaceId == workplaceId
+                            && x.StartTime > DateTime.Now)
+                .Include(x => x.Client);
+        }
+
         public IEnumerable<WorkplaceOrder> GetFutureWorkplaceOrdersByClient(DateTime date, int clientId, int skip, int take, string like)
         {
             if (String.IsNullOrEmpty(like))

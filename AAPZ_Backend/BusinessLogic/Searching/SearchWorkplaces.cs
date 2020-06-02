@@ -51,6 +51,18 @@ namespace AAPZ_Backend.BusinessLogic.Searching
             _buildingsInRadius = GetBuildingsInRadius();
         }
 
+        public SearchWorkplaces(int clientId)
+        {
+            _workplaceParameterDB = new WorkplaceParameterRepository();
+            _searchSettingDB = new SearchSettingRepository();
+            _buildingDB = new BuildingRepository();
+            _workplaceDB = new WorkplaceRepository();
+            _workplaceEquipmentDB = new WorkplaceEquipmentRepository();
+                        _workplaceParameters = _workplaceParameterDB.GetEntityListByClientId(clientId);
+            _idealMark = GetIdealMark();
+            _searchSetting = _searchSettingDB.GetEntity(clientId);
+        }
+
         private double GetIdealMark()
         {
             double idealMark = 0;
@@ -79,6 +91,12 @@ namespace AAPZ_Backend.BusinessLogic.Searching
             }
 
             return searchingResult;
+        }
+
+        public BuildingSearchingResult GetAppropriationByBuildingResults(long buildingId)
+        {
+            Building building = _buildingDB.GetEntity(buildingId);
+            return GetBuildingSearchingResult(building);
         }
 
         private BuildingSearchingResult GetBuildingSearchingResult(Building building)

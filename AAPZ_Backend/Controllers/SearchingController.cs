@@ -36,6 +36,22 @@ namespace AAPZ_Backend.Controllers
             return new ObjectResult(sw.GetSearchingResult());
         }
 
+        [ProducesResponseType(typeof(BuildingSearchingResult), StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet("GetAppropriationByBuildingResults/{buildingId}")]
+        public IActionResult GetAppropriationByBuildingResults(long buildingId)
+        {
+            string userJWTId = User.FindFirst("id")?.Value;
+            Client client = clientDB.GetCurrentClient(userJWTId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            SearchWorkplaces sw = new SearchWorkplaces(client.Id);
+            return new ObjectResult(sw.GetAppropriationByBuildingResults(buildingId));
+        }
+
         /*  [ProducesResponseType(typeof(FindedWorkplace), StatusCodes.Status200OK)]
           [Authorize]
           [HttpPost("GetAppropriationPercentage")]
